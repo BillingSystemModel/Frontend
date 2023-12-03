@@ -1,0 +1,21 @@
+.side-menu-header-container {
+    display: flex;
+    flex: 1;
+}
+
+.side-menu-logo-container {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    margin-left: 8px;
+}
+
+.side-menu-kklr {
+    height: 100%;
+    font-size: 33px;
+}
+
+.side-menu-item {
+    margin: 0 !important;
+    font-size: 1.3rem !important;
+}

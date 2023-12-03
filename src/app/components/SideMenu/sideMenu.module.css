@@ -1,0 +1,5 @@
+.side-menu-container {
+    width: 50%;
+    display: flex;
+    justify-content: start;
+}
