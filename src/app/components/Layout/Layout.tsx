@@ -4,12 +4,14 @@ import {SideMenu} from '../SideMenu/SideMenu';
 import './Layout.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
+import {Header} from '../Header';
 
 export const Layout = memo(function Layout() {
     // Наш App.tsx
     return (
         <div className="layout-container">
             <SideMenu />
+            <Header />
             <Outlet />
         </div>
     );
