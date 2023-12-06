@@ -11,8 +11,10 @@ export const Layout = memo(function Layout() {
     return (
         <div className="layout-container">
             <SideMenu />
-            <Header />
-            <Outlet />
+            <div style={{width: '100%', height: '100%', overflow: 'auto'}}>
+                <Header />
+                <Outlet />
+            </div>
         </div>
     );
 });
