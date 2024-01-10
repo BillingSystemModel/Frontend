@@ -2,9 +2,9 @@ export enum Routes {
   MAIN_PAGE = "/",
   LOGIN = "/login",
   REGISTER = "/register",
-  PERSONAL_AREA = "/personalArea",
-  PERSONAL_AREA_TARIFF = "/personalArea/tariff",
-  PERSONAL_AREA_MAIN = "/personalArea/main",
+  PERSONAL_ACCOUNT = "/personalAccount",
+  PERSONAL_DATA = "/personalAccount/personalData",
+  TARIFF = "/personalAccount/tariff",
   REPORT = "/report",
   TARIFFS = "/tariffs",
 }
