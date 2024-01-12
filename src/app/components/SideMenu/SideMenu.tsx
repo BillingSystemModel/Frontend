@@ -33,7 +33,7 @@ export const SideMenu = memo(function SideMenu() {
             <CDBSidebarContent>
                 <CDBSidebarMenu>
                     <CDBSidebarMenuItem className="side-menu-item" icon="bi bi-person-fill" iconSize="lg">
-                        <a href={Routes.PERSONAL_DATA}>Личный кабинет</a>
+                        <a href={Routes.PERSONAL_ACCOUNT}>Личный кабинет</a>
                     </CDBSidebarMenuItem>
                     <CDBSidebarMenuItem className="side-menu-item" icon="bi bi-justify">
                         <a href={Routes.TARIFFS}>Тарифы</a>
