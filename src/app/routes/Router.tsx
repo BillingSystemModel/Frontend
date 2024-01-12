@@ -19,15 +19,16 @@ export const Router = memo(function Router() {
                         <Route path={Routes.TARIFFS} element={<Tariffs/>}/>
 
                         {/*Личный кабинет*/}
-                        <Route path={Routes.PERSONAL_ACCOUNT} element={<PersonalAccount />}>
-                            <Route path={Routes.PERSONAL_DATA} element={<PersonalData />} />
-                            <Route path={Routes.TARIFF} element={<Tariff />} />
+                        {/*<Route path={Routes.PERSONAL_ACCOUNT} element={<PersonalAccount/>} />*/}
+                        <Route path={Routes.PERSONAL_ACCOUNT} element={<PersonalAccount/>}>
+                            <Route path={Routes.PERSONAL_DATA} element={<PersonalData/>}/>
+                            <Route path={Routes.TARIFF} element={<Tariff/>}/>
                         </Route>
-                        </Route>,
-                            ),
-                            ),
-                            [],
-                            );
+                    </Route>,
+                ),
+            ),
+        [],
+    );
 
-                            return <RouterProvider router={router} />;
-                        });
+    return <RouterProvider router={router}/>;
+});

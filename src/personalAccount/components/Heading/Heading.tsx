@@ -5,7 +5,7 @@ interface HeadingProps {
     description: string;
 }
 
-export const Heading = memo(function Heading(props: HeadingProps){
+export const Heading = memo(function Heading(props: HeadingProps) {
     const {header, description} = props;
     return (<div>
         <h5 className='user-data-person fw-normal'>

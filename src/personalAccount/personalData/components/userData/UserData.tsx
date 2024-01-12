@@ -11,6 +11,6 @@ interface UserDataProps {
 
 export const UserData = memo(function UserData({person}: UserDataProps) {
     return (
-        <Heading header={person.fullName} description={person.phone} />
+        <Heading header={person.fullName} description={person.phone}/>
     )
 })
