@@ -1,31 +1,31 @@
 import React, {memo} from 'react';
 import {Button, Form} from 'react-bootstrap';
-import {Link, useNavigate} from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 
 import {LeftPanelLogo} from '../app/components';
-import {Routes} from '../app';
-import {TOKEN_KEY} from '../app/routes/RequireAuth';
+import {Routes, TOKEN_KEY} from '../app';
 
-import './Login.css';
+import './Register.css';
 
 const baseURL = 'http://localhost:8080/crm/api';
 
-export const Login = memo(function Login() {
+export const Register = memo(function Register() {
     const navigate = useNavigate();
 
     const handleClick = async () => {
-        const postData = {
-            phoneNumber: '71111111111',
-            password: '1',
+        const userRegister = {
+            fullName: 'Art Art',
+            phoneNumber: '72221111111',
+            password: '1234',
         };
 
         try {
-            const res = await fetch(`${baseURL}/auth/login`, {
+            const res = await fetch(`${baseURL}/auth/register`, {
                 method: 'post',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(postData),
+                body: JSON.stringify(userRegister),
             });
 
             if (!res.ok) {
@@ -44,15 +44,19 @@ export const Login = memo(function Login() {
     };
 
     return (
-        <div className="login-page">
+        <div className="register-page">
             <LeftPanelLogo />
-            <div className="login-right-panel">
-                <div className="login-form-container">
-                    <div className="login-form-title-container">
-                        <span className="login-form-title">И снова здравствуйте!</span>
-                        <span className="login-form-subtitle">Добро пожаловать</span>
+            <div className="register-right-panel">
+                <div className="register-form-container">
+                    <div className="register-form-title-container">
+                        <span className="register-form-title">Добро пожаловать!</span>
+                        <span className="register-form-subtitle">Зарегистрируйтесь, чтобы начать</span>
                     </div>
-                    <Form className="login-form-group">
+                    <Form className="register-form-group">
+                        <Form.Group className="mb-3" controlId="formPlaintextName">
+                            <Form.Control placeholder="Фамилия и Имя" type="text" />
+                        </Form.Group>
+
                         <Form.Group className="mb-3" controlId="formPlaintextPhone">
                             <Form.Control placeholder="Номер телефона" type="text" />
                         </Form.Group>
@@ -61,14 +65,14 @@ export const Login = memo(function Login() {
                             <Form.Control placeholder="Пароль" type="password" />
                         </Form.Group>
 
-                        <Button className="login-submit-button" onClick={handleClick}>
-                            Войти
+                        <Form.Group className="mb-3" controlId="formPlaintextReturnPassword">
+                            <Form.Control placeholder="Повторный ввод пароля" type="password" />
+                        </Form.Group>
+
+                        <Button className="register-submit-button" onClick={handleClick}>
+                            Зарегистрироваться
                         </Button>
                     </Form>
-
-                    <Link className="login-register" to={Routes.REGISTER}>
-                        Зарегистрироваться
-                    </Link>
                 </div>
             </div>
         </div>
