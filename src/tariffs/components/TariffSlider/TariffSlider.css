@@ -1,6 +1,6 @@
 :root {
-    --red: #9db5e5;
-    --darkred: #0851d9;
+    --blue-custom: #9db5e5;
+    --darkred: #c6bfee;
     --platinum: #e5e5e5;
     --black: #2b2d42;
     --white: #fff;
@@ -35,19 +35,12 @@
     margin-right: 10px;
 }
 
-.card:hover {
-    color: var(--white);
-    background: var(--red);
-}
-
 .card .card-title {
     font-size: 20px;
 }
 
 .card .card-content {
-    /*margin:  0;*/
     max-width: 85%;
-    /*display: block;*/
     margin: 1rem auto;
 }
 
@@ -59,14 +52,10 @@
     display: inline-block;
     text-decoration: none;
     color: white;
-    background: var(--red);
+    background: var(--blue-custom);
     padding: 6px 12px;
     border-radius: 8px;
     transition: background 0.2s;
-}
-
-.card:hover .card-link {
-    background: var(--darkred);
 }
 
 .cards::-webkit-scrollbar {
@@ -84,4 +73,15 @@
 
 .cards::-webkit-scrollbar-track {
     background: var(--thumb);
+}
+
+.tariff-card-submit {
+    margin-top: auto;
+    width: 60%;
+}
+
+.tariff-card-body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
 }
