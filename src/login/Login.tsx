@@ -37,7 +37,7 @@ export const Login = memo(function Login() {
 
             // Поместить в session storage и номер теелфона для запросов
             sessionStorage.setItem(TOKEN_KEY, token);
-            navigate(Routes.PERSONAL_DATA, {replace: true});
+            navigate(Routes.PERSONAL_ACCOUNT, {replace: true});
         } catch (err) {
             console.error(err);
         }
