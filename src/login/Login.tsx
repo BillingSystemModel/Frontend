@@ -3,12 +3,10 @@ import {Button, Form} from 'react-bootstrap';
 import {Link, useNavigate} from 'react-router-dom';
 
 import {LeftPanelLogo} from '../app/components';
-import {Routes} from '../app';
-import {TOKEN_KEY} from '../app/routes/RequireAuth';
+import {Routes, TOKEN_KEY} from '../app';
+import {baseURL} from '../constants';
 
 import './Login.css';
-
-const baseURL = 'http://localhost:8080/crm/api';
 
 export const Login = memo(function Login() {
     const navigate = useNavigate();

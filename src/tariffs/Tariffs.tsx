@@ -5,13 +5,12 @@ import {Alert, Button, Col, Form, InputGroup, Modal, Row} from 'react-bootstrap'
 import {SubmitHandler, useForm} from 'react-hook-form';
 
 import {TariffsSlider} from './components';
-import {FiltersTariffs, Tariffs as TariffsI} from './types';
+import {FiltersTariffs, Tariff, Tariffs as TariffsI} from './types';
 import {TOKEN_KEY} from '../app';
 import {filterTariffs} from './logic/filterTariffs';
 
 import './Tariffs.css';
-
-const baseURL = 'http://localhost:8080/crm/api';
+import {baseURL, phoneNumber} from '../constants';
 
 export const Tariffs = memo(function Tariffs() {
     const token = sessionStorage.getItem(TOKEN_KEY);
@@ -23,6 +22,17 @@ export const Tariffs = memo(function Tariffs() {
         queryKey: ['tariffs'],
         queryFn: () =>
             fetch(`${baseURL}/tariffs`, {
+                method: 'get',
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }).then((res) => res.json()),
+    });
+
+    const {data: tariffInfoRes, isLoading: isLoadingTariffInfo} = useQuery<{tariff: Tariff}>({
+        queryKey: ['tariffInfo'],
+        queryFn: () =>
+            fetch(`${baseURL}/tariff/${phoneNumber}`, {
                 method: 'get',
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -65,7 +75,7 @@ export const Tariffs = memo(function Tariffs() {
         setShowFilters(false);
     }, []);
 
-    if (isLoading) {
+    if (isLoading || isLoadingTariffInfo) {
         return (
             <div style={{display: 'flex', flexDirection: 'column', height: '75%'}}>
                 <RotateLoader className="text-center m-auto" color="#5c31f1" size={35} margin={40} />
@@ -81,7 +91,7 @@ export const Tariffs = memo(function Tariffs() {
         <div className="tariffs-page">
             <div className="tariffs-search-container">
                 <input
-                    type="text"
+                    type="search"
                     value={search || ''}
                     onChange={handleChangeInput}
                     className="form-control tariffs-search-input"
@@ -185,7 +195,7 @@ export const Tariffs = memo(function Tariffs() {
                 </Modal>
             </div>
             <div className="tariffs-slider-container">
-                <TariffsSlider tariffs={filteredTariffs} />
+                <TariffsSlider tariffs={filteredTariffs} tariffIdSelect={tariffInfoRes?.tariff.id || ''} />
             </div>
         </div>
     );
