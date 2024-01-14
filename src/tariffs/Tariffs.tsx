@@ -1,11 +1,13 @@
 import {memo, useCallback, useMemo, useState} from 'react';
 import {useQuery} from '@tanstack/react-query';
 import {RotateLoader} from 'react-spinners';
-import {Alert, Button} from 'react-bootstrap';
+import {Alert, Button, Col, Form, InputGroup, Modal, Row} from 'react-bootstrap';
+import {SubmitHandler, useForm} from 'react-hook-form';
 
 import {TariffsSlider} from './components';
-import {Tariffs as TariffsI} from './types';
+import {FiltersTariffs, Tariffs as TariffsI} from './types';
 import {TOKEN_KEY} from '../app';
+import {filterTariffs} from './logic/filterTariffs';
 
 import './Tariffs.css';
 
@@ -28,15 +30,20 @@ export const Tariffs = memo(function Tariffs() {
             }).then((res) => res.json()),
     });
 
-    const [search, setSearch] = useState<string>();
+    const {
+        register: filtersTariffRegister,
+        handleSubmit: filtersTariffHandleSubmit,
+        // formState: {errors},
+    } = useForm<FiltersTariffs>();
 
-    const filteredTariffs = useMemo(() => {
-        if (!search) {
-            return resTariffs?.tariffs;
-        }
-        const lowerSearch = search.toLowerCase();
-        return resTariffs?.tariffs.filter((tariff) => tariff.title.toLowerCase().includes(lowerSearch));
-    }, [resTariffs?.tariffs, search]);
+    const [search, setSearch] = useState<string>();
+    const [showFilters, setShowFilters] = useState(false);
+    const [filters, setFilters] = useState<FiltersTariffs>();
+
+    const filteredTariffs = useMemo(
+        () => filterTariffs(resTariffs?.tariffs, {search: search, filters: filters}),
+        [filters, resTariffs?.tariffs, search],
+    );
 
     const handleChangeInput = useCallback(
         (e: any) => {
@@ -44,6 +51,19 @@ export const Tariffs = memo(function Tariffs() {
         },
         [setSearch],
     );
+
+    const handleOpen = useCallback(() => {
+        setShowFilters(true);
+    }, []);
+
+    const handleClose = useCallback(() => {
+        setShowFilters(false);
+    }, []);
+
+    const handleSubmit: SubmitHandler<FiltersTariffs> = useCallback((filtersTariff) => {
+        setFilters(filtersTariff);
+        setShowFilters(false);
+    }, []);
 
     if (isLoading) {
         return (
@@ -62,13 +82,107 @@ export const Tariffs = memo(function Tariffs() {
             <div className="tariffs-search-container">
                 <input
                     type="text"
-                    value={search}
+                    value={search || ''}
                     onChange={handleChangeInput}
                     className="form-control tariffs-search-input"
                     placeholder="Поиск по названию"
                     aria-label="Поиск по названию"
                 />
-                <Button className="tariffs-button">Фильтр</Button>
+                <Button className="tariffs-button" onClick={handleOpen}>
+                    Фильтр
+                </Button>
+
+                <Modal show={showFilters} onHide={handleClose}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Фильтры</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <Form onSubmit={filtersTariffHandleSubmit(handleSubmit)}>
+                            <Form.Group as={Row} className="mb-3">
+                                <Form.Label column sm="5">
+                                    Стоимость тарифа
+                                </Form.Label>
+                                <Col sm="3">
+                                    <InputGroup className="mb-2">
+                                        <InputGroup.Text>от</InputGroup.Text>
+                                        <Form.Control placeholder="0" {...filtersTariffRegister('costTariff.min')} />
+                                    </InputGroup>
+                                </Col>
+                                <Col sm="3">
+                                    <InputGroup className="mb-2">
+                                        <InputGroup.Text>до</InputGroup.Text>
+                                        <Form.Control placeholder="0" {...filtersTariffRegister('costTariff.max')} />
+                                    </InputGroup>
+                                </Col>
+                            </Form.Group>
+
+                            <Form.Group as={Row} className="mb-3">
+                                <Form.Label column sm="5">
+                                    Кол-во МИН звонков
+                                </Form.Label>
+                                <Col sm="3">
+                                    <InputGroup className="mb-2">
+                                        <InputGroup.Text>от</InputGroup.Text>
+                                        <Form.Control placeholder="0" {...filtersTariffRegister('minutesTariff.min')} />
+                                    </InputGroup>
+                                </Col>
+                                <Col sm="3">
+                                    <InputGroup className="mb-2">
+                                        <InputGroup.Text>до</InputGroup.Text>
+                                        <Form.Control placeholder="0" {...filtersTariffRegister('minutesTariff.max')} />
+                                    </InputGroup>
+                                </Col>
+                            </Form.Group>
+
+                            <Form.Group as={Row} className="mb-3">
+                                <Form.Label column sm="5">
+                                    Кол-во ГБ интернета
+                                </Form.Label>
+                                <Col sm="3">
+                                    <InputGroup className="mb-2">
+                                        <InputGroup.Text>от</InputGroup.Text>
+                                        <Form.Control
+                                            placeholder="0"
+                                            {...filtersTariffRegister('internetTariff.min')}
+                                        />
+                                    </InputGroup>
+                                </Col>
+                                <Col sm="3">
+                                    <InputGroup className="mb-2">
+                                        <InputGroup.Text>до</InputGroup.Text>
+                                        <Form.Control
+                                            placeholder="0"
+                                            {...filtersTariffRegister('internetTariff.max')}
+                                        />
+                                    </InputGroup>
+                                </Col>
+                            </Form.Group>
+
+                            <Form.Group as={Row} className="mb-3">
+                                <Form.Label column sm="5">
+                                    Кол-во ШТ сообщений
+                                </Form.Label>
+                                <Col sm="3">
+                                    <InputGroup className="mb-2">
+                                        <InputGroup.Text>от</InputGroup.Text>
+                                        <Form.Control placeholder="0" {...filtersTariffRegister('smsTariff.min')} />
+                                    </InputGroup>
+                                </Col>
+                                <Col sm="3">
+                                    <InputGroup className="mb-2">
+                                        <InputGroup.Text>до</InputGroup.Text>
+                                        <Form.Control placeholder="0" {...filtersTariffRegister('smsTariff.max')} />
+                                    </InputGroup>
+                                </Col>
+                            </Form.Group>
+                            <Col>
+                                <Button type="submit" className="tariffs-submit">
+                                    Применить
+                                </Button>
+                            </Col>
+                        </Form>
+                    </Modal.Body>
+                </Modal>
             </div>
             <div className="tariffs-slider-container">
                 <TariffsSlider tariffs={filteredTariffs} />
