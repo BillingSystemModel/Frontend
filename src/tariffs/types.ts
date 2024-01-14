@@ -3,10 +3,11 @@ export interface Tariffs {
 }
 
 export interface Tariff {
+    id: string;
     title: string;
     description: string;
-    telephonyPackage: TelephonyPackage;
-    internetPackage: InternetPackage;
+    telephonyPackage?: TelephonyPackage;
+    internetPackage?: InternetPackage;
 }
 
 export interface TelephonyPackage {
@@ -24,4 +25,16 @@ export interface InternetPackage {
     packCostPerMB: boolean;
     extraPackCost: number;
     extraPackCostPerMB: boolean;
+}
+
+export interface FiltersTariffs {
+    costTariff: FilterTariffInfo;
+    minutesTariff: FilterTariffInfo;
+    smsTariff: FilterTariffInfo;
+    internetTariff: FilterTariffInfo;
+}
+
+export interface FilterTariffInfo {
+    min: string;
+    max: string;
 }
