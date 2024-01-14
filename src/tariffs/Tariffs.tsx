@@ -185,7 +185,7 @@ export const Tariffs = memo(function Tariffs() {
                                     </InputGroup>
                                 </Col>
                             </Form.Group>
-                            <Col>
+                            <Col sm="11">
                                 <Button type="submit" className="tariffs-submit">
                                     Применить
                                 </Button>

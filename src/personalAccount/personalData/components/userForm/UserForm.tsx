@@ -8,12 +8,11 @@ import {User} from "../../../types";
 import classNames from "classnames";
 import {TOKEN_KEY} from "../../../../app";
 import {baseURL, phoneNumber} from "../../../../constants";
+import {FormType, PasswordForm} from "./types";
 
 interface UserFormProps extends HTMLAttributes<HTMLDivElement> {
     user: User;
 }
-
-type FormType = { email: string } | { birthDate: string } | { passport: string };
 
 export const UserForm = memo(function UserForm(props: UserFormProps) {
     const {user, className} = props;
@@ -21,6 +20,8 @@ export const UserForm = memo(function UserForm(props: UserFormProps) {
     const [showCancelModal, setShowCancelModal] = useState(false);
     const [formChanger, setFormChanger] = useState<FormType>();
     const [keyReset, setKeyReset] = useState<string>();
+    const [showPasswordModal, setShowPasswordModal] = useState(false);
+    const [oldPasswordError, setOldPasswordError] = useState(false)
 
     const {
         register: passportRegister,
@@ -43,6 +44,14 @@ export const UserForm = memo(function UserForm(props: UserFormProps) {
         setValue: emailSetValue,
         // formState: {errors},
     } = useForm<{ email: string }>();
+    const {
+        register: passwordRegister,
+        reset: passwordReset,
+        handleSubmit: passwordHandleSubmit,
+        watch: passwordWatch,
+        setValue: passwordSetValue,
+        // formState: {errors},
+    } = useForm<{ password: PasswordForm }>();
 
     const userDateContract = user.contractDate.slice(4) + '-' + user.contractDate.slice(2, 4) + '-' + user.contractDate.slice(0, 2);
     const userBirthDate = user.birthDate.slice(4) + '-' + user.birthDate.slice(2, 4) + '-' + user.birthDate.slice(0, 2);
@@ -67,6 +76,49 @@ export const UserForm = memo(function UserForm(props: UserFormProps) {
     const handleEmailSubmit: SubmitHandler<{ email: string }> = (data) => {
         setFormChanger(data);
         setShowModal(true);
+    }
+
+    const handlePasswordSubmit: SubmitHandler<{ password: PasswordForm }> = async (data) => {
+        const postPassword = {
+            username: phoneNumber,
+            currentPassword: data.password.oldPassword,
+            newPassword: data.password.repeatedNewPassword,
+        };
+
+
+        try {
+            const res = await fetch(`${baseURL}/auth/changePassword`, {
+                method: 'POST',
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(postPassword),
+            });
+
+            const response = await res.json();
+
+            if (!res.ok) {
+                const message = `An error has occured: ${res.status} - ${res.statusText}`;
+                throw new Error(message);
+            }
+
+            if (!response.success) {
+                if (response.message !== 'New password matches current password') {
+                    setOldPasswordError(true);
+                } else {
+                    setShowPasswordModal(false);
+                    setOldPasswordError(false);
+                    passwordReset();
+                }
+            } else {
+                setShowPasswordModal(false);
+                setOldPasswordError(false);
+                passwordReset();
+            }
+        } catch (err) {
+            console.error(err);
+        }
     }
 
     const handleChangeForm = async () => {
@@ -115,14 +167,26 @@ export const UserForm = memo(function UserForm(props: UserFormProps) {
         setShowCancelModal(false);
     }
 
-    const handleOpenModal = () => {
-        setShowModal(true);
+    const handleOpenPasswordModal = () => {
+        setShowPasswordModal(true);
     }
 
     const handleCloseModal = () => {
         setShowModal(false);
         setShowCancelModal(false);
     }
+
+    const handleClosePasswordModal = () => {
+        setShowPasswordModal(false);
+        passwordReset();
+
+    }
+
+    const isPasswordChangeDisabled = passwordWatch("password.newPassword") !== passwordWatch("password.repeatedNewPassword")
+        || !passwordWatch("password.oldPassword") || !passwordWatch("password.newPassword")
+        || !passwordWatch("password.repeatedNewPassword");
+
+    const isEqualPasswords = passwordWatch("password.newPassword") === passwordWatch("password.repeatedNewPassword") || !passwordWatch("password.repeatedNewPassword");
 
     return (
         <div className={classNames('user-form', className)}>
@@ -221,7 +285,7 @@ export const UserForm = memo(function UserForm(props: UserFormProps) {
                 </Form.Group>
             </Form>
 
-            <Button variant="link" onClick={handleOpenModal} className='change-pwd'>
+            <Button variant="link" onClick={handleOpenPasswordModal} className='change-pwd'>
                 Изменить пароль
             </Button>
 
@@ -253,6 +317,47 @@ export const UserForm = memo(function UserForm(props: UserFormProps) {
                     </Button>
                     <Button onClick={handleResetForm}>Да</Button>
                 </Modal.Footer>
+            </Modal>
+
+            <Modal show={showPasswordModal} onHide={handleClosePasswordModal}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Изменить пароль</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form onSubmit={passwordHandleSubmit(handlePasswordSubmit)}>
+                        <Form.Group className="mb-3">
+                            <Col sm="11">
+                                <Form.Control type="password"
+                                              placeholder="Старый пароль" {...passwordRegister("password.oldPassword")}
+                                              isInvalid={oldPasswordError}/>
+                                <Form.Control.Feedback type="invalid">
+                                    Старый пароль введен неверно
+                                </Form.Control.Feedback>
+                            </Col>
+                        </Form.Group>
+                        <Form.Group className="mb-3">
+                            <Col sm="11">
+                                <Form.Control type="password"
+                                              placeholder="Новый пароль" {...passwordRegister("password.newPassword")}/>
+                            </Col>
+                        </Form.Group>
+                        <Form.Group className="mb-3">
+                            <Col sm="11">
+                                <Form.Control type="password"
+                                              placeholder="Повторить новый пароль" {...passwordRegister("password.repeatedNewPassword")}
+                                              isInvalid={!isEqualPasswords}/>
+                                <Form.Control.Feedback type="invalid">
+                                    Пароль не совпадает с введенным выше паролем
+                                </Form.Control.Feedback>
+                            </Col>
+                        </Form.Group>
+                        <Col sm="11">
+                            <Button type="submit" className="pwd-submit-btn" disabled={isPasswordChangeDisabled}>
+                                Изменить
+                            </Button>
+                        </Col>
+                    </Form>
+                </Modal.Body>
             </Modal>
 
         </div>)

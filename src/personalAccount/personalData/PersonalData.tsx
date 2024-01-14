@@ -13,7 +13,6 @@ export const PersonalData = memo(function PersonalData() {
 
     const {
         data: user,
-        isLoading,
         error,
     } = useQuery<User>({
         queryKey: ['user'],
@@ -25,26 +24,6 @@ export const PersonalData = memo(function PersonalData() {
                 },
             }).then((res) => res.json()),
     });
-
-    // const user: User = {
-    //     fio: "Kurdikov Artem Sergeevich",
-    //     phoneNumber: "71111111111",
-    //     numberPersonalAccount: 1,
-    //     contractDate: "01122022",
-    //     region: "RU",
-    //     passport: "111",
-    //     birthDate: "08082003",
-    //     email: "temp@gmail.com"
-    // }
-
-    // if (isLoading) {
-    //     return (
-    //         <div style={{display: 'flex', flexDirection: 'column', height: '75%'}}>
-    //             <RotateLoader className="text-center m-auto" color="#5c31f1" size={35} margin={40}/>
-    //         </div>
-    //     );
-    // }
-    //
 
     if (user === undefined || error) {
         return <Alert className="center">Ошибка сервера</Alert>;
