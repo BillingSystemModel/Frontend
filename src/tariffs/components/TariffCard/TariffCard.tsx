@@ -1,19 +1,55 @@
-import {memo, useMemo} from 'react';
-import {Button, Card} from 'react-bootstrap';
+import {Dispatch, memo, SetStateAction, useCallback, useMemo, useState} from 'react';
+import {Button, Card, Modal} from 'react-bootstrap';
 
 import {Tariff} from '../../types';
 
 import '../TariffSlider/TariffSlider.css';
 import {getTariffCost} from '../../logic/filterTariffs';
+import {baseURL, phoneNumber} from '../../../constants';
+import {TOKEN_KEY} from '../../../app';
 
 export interface PropsTariff {
     tariff: Tariff;
+    tariffId: string;
+    onSetTariffId: Dispatch<SetStateAction<string>>;
 }
 
-export const TariffCard = memo(function TariffCard({tariff}: PropsTariff) {
+export const TariffCard = memo(function TariffCard({tariff, tariffId, onSetTariffId}: PropsTariff) {
     const {id, telephonyPackage, title, description, internetPackage} = tariff;
+    const token = sessionStorage.getItem(TOKEN_KEY);
+    const [showModal, setShowModal] = useState(false);
 
     const tariffCost = useMemo(() => getTariffCost(tariff), [tariff]);
+
+    const handleSubmit = useCallback(async () => {
+        try {
+            const res = await fetch(`${baseURL}/changeTariff?phoneNumber=${phoneNumber}&tariffCode=${id}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            if (!res.ok) {
+                const message = `An error has occured: ${res.status} - ${res.statusText}`;
+                throw new Error(message);
+            }
+        } catch (err) {
+            console.error(err);
+        }
+
+        onSetTariffId(id);
+        setShowModal(false);
+    }, [id, onSetTariffId, token]);
+
+    const handleOpen = useCallback(() => {
+        setShowModal(true);
+    }, [setShowModal]);
+
+    const handleClose = useCallback(() => {
+        setShowModal(false);
+    }, [setShowModal]);
 
     return (
         <li className="card">
@@ -37,7 +73,25 @@ export const TariffCard = memo(function TariffCard({tariff}: PropsTariff) {
                         <span className="fw-bold">{Number((internetPackage?.packOfMB ?? 0) / 1024).toFixed(2)}</span>
                     </div>
                 </div>
-                <Button className="tariff-card-submit">Подключить</Button>
+                <Button className="tariff-card-submit" onClick={handleOpen} disabled={id === tariffId}>
+                    Подключить
+                </Button>
+
+                <Modal show={showModal} onHide={handleClose}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Подтвердите действие</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <h4>Смена тарифа</h4>
+                        <p>Вы точно уверены, что хотите сменить тариф?</p>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={handleClose}>
+                            Нет
+                        </Button>
+                        <Button onClick={handleSubmit}>Да</Button>
+                    </Modal.Footer>
+                </Modal>
             </Card.Body>
         </li>
     );

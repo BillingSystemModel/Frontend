@@ -1,4 +1,4 @@
-import {memo} from 'react';
+import {memo, useState} from 'react';
 import {TariffCard} from '../TariffCard';
 
 import {Tariff} from '../../types';
@@ -7,9 +7,14 @@ import './TariffSlider.css';
 
 export interface PropsTariffSlider {
     tariffs: Tariff[] | undefined;
+    tariffIdSelect: string;
 }
 
-export const TariffsSlider = memo(function TariffsSlider({tariffs}: PropsTariffSlider) {
+export const TariffsSlider = memo(function TariffsSlider({tariffs, tariffIdSelect}: PropsTariffSlider) {
+    const [tariffId, setTariffId] = useState(tariffIdSelect);
+
+    // console.log(tariffId);
+
     if (!tariffs) {
         return null;
     }
@@ -26,7 +31,9 @@ export const TariffsSlider = memo(function TariffsSlider({tariffs}: PropsTariffS
                 <div className="container">
                     <ul className="cards">
                         {tariffs?.map((tariff, idx) => {
-                            return <TariffCard key={idx} tariff={tariff} />;
+                            return (
+                                <TariffCard key={idx} tariff={tariff} tariffId={tariffId} onSetTariffId={setTariffId} />
+                            );
                         })}
                     </ul>
                 </div>

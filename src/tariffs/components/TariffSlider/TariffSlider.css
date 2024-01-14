@@ -80,6 +80,11 @@
     width: 60%;
 }
 
+.tariff-card-submit{
+    margin-top: auto;
+    width: 60%;
+}
+
 .tariff-card-body {
     display: flex;
     flex: 1;
