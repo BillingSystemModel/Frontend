@@ -6,14 +6,14 @@ import {SubmitHandler, useForm} from 'react-hook-form';
 
 import {TariffsSlider} from './components';
 import {FiltersTariffs, Tariff, Tariffs as TariffsI} from './types';
-import {TOKEN_KEY} from '../app';
 import {filterTariffs} from './logic/filterTariffs';
 
 import './Tariffs.css';
-import {baseURL, phoneNumber} from '../constants';
+import {baseURL, PHONE_KEY, TOKEN_KEY} from '../constants';
 
 export const Tariffs = memo(function Tariffs() {
     const token = sessionStorage.getItem(TOKEN_KEY);
+    const phoneNumber = sessionStorage.getItem(PHONE_KEY)!;
     const {
         data: resTariffs,
         isLoading,

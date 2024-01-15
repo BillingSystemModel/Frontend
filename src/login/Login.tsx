@@ -1,14 +1,14 @@
 import React, {memo, useState} from 'react';
 import {Alert, Button, Form} from 'react-bootstrap';
 import {Link, useNavigate} from 'react-router-dom';
+import {SubmitHandler, useForm} from 'react-hook-form';
 
 import {LeftPanelLogo} from '../app/components';
-import {Routes, TOKEN_KEY} from '../app';
-import {baseURL} from '../constants';
+import {Routes} from '../app';
+import {baseURL, PHONE_KEY, TOKEN_KEY} from '../constants';
+import {LoginForm} from './types';
 
 import './Login.css';
-import {SubmitHandler, useForm} from 'react-hook-form';
-import {LoginForm} from './types';
 
 export const Login = memo(function Login() {
     const navigate = useNavigate();
@@ -39,6 +39,7 @@ export const Login = memo(function Login() {
 
             // Поместить в session storage и номер теелфона для запросов
             sessionStorage.setItem(TOKEN_KEY, token);
+            sessionStorage.setItem(PHONE_KEY, loginForm.phoneNumber);
             navigate(Routes.PERSONAL_ACCOUNT, {replace: true});
         } catch (err) {
             setErrorSubmit(true);

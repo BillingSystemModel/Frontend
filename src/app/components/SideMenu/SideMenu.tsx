@@ -8,9 +8,10 @@ import {
 } from 'cdbreact';
 import {memo, useCallback, useState} from 'react';
 import './sideMenu.css';
-import {Routes, TOKEN_KEY} from '../../routes';
+import {Routes} from '../../routes';
 import {Button, Modal} from 'react-bootstrap';
 import {useNavigate} from 'react-router-dom';
+import {TOKEN_KEY} from '../../../constants';
 
 export const SideMenu = memo(function SideMenu() {
     const [showModal, setShowModal] = useState(false);
