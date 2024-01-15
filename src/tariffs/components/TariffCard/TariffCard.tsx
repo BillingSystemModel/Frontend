@@ -5,8 +5,7 @@ import {Tariff} from '../../types';
 
 import '../TariffSlider/TariffSlider.css';
 import {getTariffCost} from '../../logic/filterTariffs';
-import {baseURL, phoneNumber} from '../../../constants';
-import {TOKEN_KEY} from '../../../app';
+import {baseURL, PHONE_KEY, TOKEN_KEY} from '../../../constants';
 import {getTariffSMSCount} from "../../logic/tariffSMS";
 
 export interface PropsTariff {
@@ -18,6 +17,7 @@ export interface PropsTariff {
 export const TariffCard = memo(function TariffCard({tariff, tariffId, onSetTariffId}: PropsTariff) {
     const {id, telephonyPackage, title, description, internetPackage} = tariff;
     const token = sessionStorage.getItem(TOKEN_KEY);
+    const phoneNumber = sessionStorage.getItem(PHONE_KEY);
     const [showModal, setShowModal] = useState(false);
 
     const tariffCost = useMemo(() => getTariffCost(tariff), [tariff]);
@@ -42,7 +42,7 @@ export const TariffCard = memo(function TariffCard({tariff, tariffId, onSetTarif
 
         onSetTariffId(id);
         setShowModal(false);
-    }, [id, onSetTariffId, token]);
+    }, [id, onSetTariffId, phoneNumber, token]);
 
     const handleOpen = useCallback(() => {
         setShowModal(true);

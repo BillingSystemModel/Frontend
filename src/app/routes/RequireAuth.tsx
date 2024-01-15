@@ -1,12 +1,11 @@
 import {memo, ReactNode} from 'react';
 import {Navigate, useLocation} from 'react-router-dom';
 import {Routes} from './Routes';
+import {TOKEN_KEY} from '../../constants';
 
 interface Props {
     children: ReactNode;
 }
-
-export const TOKEN_KEY = 'token';
 
 export const RequireAuth = memo(function RequireAuth(props: Props) {
     const location = useLocation();

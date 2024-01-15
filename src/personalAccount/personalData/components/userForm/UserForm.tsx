@@ -1,14 +1,13 @@
-import {HTMLAttributes, memo, useState} from "react";
-import {Button, Col, Form, Modal, Row} from "react-bootstrap";
-import {SubmitHandler, useForm} from "react-hook-form";
+import {HTMLAttributes, memo, useState} from 'react';
+import {Button, Col, Form, Modal, Row} from 'react-bootstrap';
+import {SubmitHandler, useForm} from 'react-hook-form';
 
 import './UseForm.css';
 
-import {User} from "../../../types";
-import classNames from "classnames";
-import {TOKEN_KEY} from "../../../../app";
-import {baseURL, phoneNumber} from "../../../../constants";
-import {FormType, PasswordForm} from "./types";
+import {User} from '../../../types';
+import classNames from 'classnames';
+import {baseURL, PHONE_KEY, TOKEN_KEY} from '../../../../constants';
+import {FormType, PasswordForm} from './types';
 
 interface UserFormProps extends HTMLAttributes<HTMLDivElement> {
     user: User;
@@ -21,7 +20,7 @@ export const UserForm = memo(function UserForm(props: UserFormProps) {
     const [formChanger, setFormChanger] = useState<FormType>();
     const [keyReset, setKeyReset] = useState<string>();
     const [showPasswordModal, setShowPasswordModal] = useState(false);
-    const [oldPasswordError, setOldPasswordError] = useState(false)
+    const [oldPasswordError, setOldPasswordError] = useState(false);
 
     const {
         register: passportRegister,
@@ -29,55 +28,57 @@ export const UserForm = memo(function UserForm(props: UserFormProps) {
         watch: passportWatch,
         setValue: passportSetValue,
         // formState: {errors},
-    } = useForm<{ passport: string }>();
+    } = useForm<{passport: string}>();
     const {
         register: birthDateRegister,
         handleSubmit: birthDateHandleSubmit,
         watch: birthDateWatch,
         setValue: birthDateSetValue,
-        // formState: {errors},
-    } = useForm<{ birthDate: string }>();
+    } = useForm<{birthDate: string}>();
     const {
         register: emailRegister,
         handleSubmit: emailHandleSubmit,
         watch: emailWatch,
         setValue: emailSetValue,
-        // formState: {errors},
-    } = useForm<{ email: string }>();
+    } = useForm<{email: string}>();
     const {
         register: passwordRegister,
         reset: passwordReset,
         handleSubmit: passwordHandleSubmit,
         watch: passwordWatch,
-        // formState: {errors},
-    } = useForm<{ password: PasswordForm }>();
+        setValue: passwordSetValue,
+    } = useForm<{password: PasswordForm}>();
 
-    const userDateContract = user.contractDate.slice(4) + '-' + user.contractDate.slice(2, 4) + '-' + user.contractDate.slice(0, 2);
-    const userBirthDate = user.birthDate.slice(4) + '-' + user.birthDate.slice(2, 4) + '-' + user.birthDate.slice(0, 2);
+    const userDateContract =
+        user.contractDate.slice(4) + '-' + user.contractDate.slice(2, 4) + '-' + user.contractDate.slice(0, 2);
+    const userBirthDate = user.birthDate
+        ? user.birthDate?.slice(4) + '-' + user.birthDate?.slice(2, 4) + '-' + user.birthDate?.slice(0, 2)
+        : '';
 
-    let showPassportButton = passportWatch("passport") ? passportWatch("passport") !== user.passport : false;
-    const showBirthDateButton = birthDateWatch("birthDate") ? birthDateWatch("birthDate") !== userBirthDate : false;
-    const showEmailButton = emailWatch("email") ? emailWatch("email") !== user.email : false;
+    let showPassportButton = passportWatch('passport') ? passportWatch('passport') !== user.passport : false;
+    const showBirthDateButton = birthDateWatch('birthDate') ? birthDateWatch('birthDate') !== userBirthDate : false;
+    const showEmailButton = emailWatch('email') ? emailWatch('email') !== user.email : false;
 
     const token = sessionStorage.getItem(TOKEN_KEY);
+    const phoneNumber = sessionStorage.getItem(PHONE_KEY)!;
 
-    const handlePassportSubmit: SubmitHandler<{ passport: string }> = (data) => {
+    const handlePassportSubmit: SubmitHandler<{passport: string}> = (data) => {
         setFormChanger(data);
         setShowModal(true);
-    }
+    };
 
-    const handleBirthDateSubmit: SubmitHandler<{ birthDate: string }> = (data) => {
-        const formatBirthDate = data.birthDate.split("-").reverse().join("");
+    const handleBirthDateSubmit: SubmitHandler<{birthDate: string}> = (data) => {
+        const formatBirthDate = data.birthDate.split('-').reverse().join('');
         setFormChanger({birthDate: formatBirthDate});
         setShowModal(true);
-    }
+    };
 
-    const handleEmailSubmit: SubmitHandler<{ email: string }> = (data) => {
+    const handleEmailSubmit: SubmitHandler<{email: string}> = (data) => {
         setFormChanger(data);
         setShowModal(true);
-    }
+    };
 
-    const handlePasswordSubmit: SubmitHandler<{ password: PasswordForm }> = async (data) => {
+    const handlePasswordSubmit: SubmitHandler<{password: PasswordForm}> = async (data) => {
         const postPassword = {
             username: phoneNumber,
             currentPassword: data.password.oldPassword,
@@ -147,44 +148,47 @@ export const UserForm = memo(function UserForm(props: UserFormProps) {
         // @ts-ignore
         user[key as keyof User] = Object.values(formChanger!)[0];
         setShowModal(false);
-    }
+    };
 
     const handleFormChangerReset = (event: any) => {
         setKeyReset(event.target.id);
         setShowCancelModal(true);
-    }
+    };
 
     const handleResetForm = () => {
         if (keyReset === 'passport') {
-            passportSetValue("passport", user.passport);
+            passportSetValue('passport', user.passport);
         } else if (keyReset === 'birthDate') {
-            birthDateSetValue("birthDate", userBirthDate);
+            birthDateSetValue('birthDate', userBirthDate);
         } else if (keyReset === 'email') {
-            emailSetValue("email", user.email);
+            emailSetValue('email', user.email);
         }
         setShowCancelModal(false);
-    }
+    };
 
     const handleOpenPasswordModal = () => {
         setShowPasswordModal(true);
-    }
+    };
 
     const handleCloseModal = () => {
         setShowModal(false);
         setShowCancelModal(false);
-    }
+    };
 
     const handleClosePasswordModal = () => {
         setShowPasswordModal(false);
         passwordReset();
+    };
 
-    }
+    const isPasswordChangeDisabled =
+        passwordWatch('password.newPassword') !== passwordWatch('password.repeatedNewPassword') ||
+        !passwordWatch('password.oldPassword') ||
+        !passwordWatch('password.newPassword') ||
+        !passwordWatch('password.repeatedNewPassword');
 
-    const isPasswordChangeDisabled = passwordWatch("password.newPassword") !== passwordWatch("password.repeatedNewPassword")
-        || !passwordWatch("password.oldPassword") || !passwordWatch("password.newPassword")
-        || !passwordWatch("password.repeatedNewPassword");
-
-    const isEqualPasswords = passwordWatch("password.newPassword") === passwordWatch("password.repeatedNewPassword") || !passwordWatch("password.repeatedNewPassword");
+    const isEqualPasswords =
+        passwordWatch('password.newPassword') === passwordWatch('password.repeatedNewPassword') ||
+        !passwordWatch('password.repeatedNewPassword');
 
     return (
         <div className={classNames('user-form', className)}>
@@ -194,7 +198,7 @@ export const UserForm = memo(function UserForm(props: UserFormProps) {
                         Номер лицевого счета
                     </Form.Label>
                     <Col sm="5">
-                        <Form.Control type="text" defaultValue={user.numberPersonalAccount} disabled/>
+                        <Form.Control type="text" defaultValue={user.numberPersonalAccount} disabled />
                     </Col>
                 </Form.Group>
 
@@ -203,7 +207,7 @@ export const UserForm = memo(function UserForm(props: UserFormProps) {
                         Дата заключения договора
                     </Form.Label>
                     <Col sm="5">
-                        <Form.Control type="date" defaultValue={userDateContract} disabled/>
+                        <Form.Control type="date" defaultValue={userDateContract} disabled />
                     </Col>
                 </Form.Group>
 
@@ -212,7 +216,7 @@ export const UserForm = memo(function UserForm(props: UserFormProps) {
                         Регион
                     </Form.Label>
                     <Col sm="5">
-                        <Form.Control type="text" defaultValue={user.region} disabled/>
+                        <Form.Control type="text" defaultValue={user.region} disabled />
                     </Col>
                 </Form.Group>
             </Form>
@@ -223,19 +227,20 @@ export const UserForm = memo(function UserForm(props: UserFormProps) {
                         Паспорт
                     </Form.Label>
                     <Col sm="5">
-                        <Form.Control type="text" defaultValue={user.passport} {...passportRegister("passport")}/>
+                        <Form.Control type="text" defaultValue={user.passport} {...passportRegister('passport')} />
                     </Col>
-                    {showPassportButton && <>
-                        <Col className='save-btn'>
-                            <Button variant="link" type="submit">
-                                Сохранить
-                            </Button>
-                            <Button id="passport" variant="link" onClick={handleFormChangerReset}>
-                                Отменить
-                            </Button>
-                        </Col>
-                    </>
-                    }
+                    {showPassportButton && (
+                        <>
+                            <Col className="save-btn">
+                                <Button variant="link" type="submit">
+                                    Сохранить
+                                </Button>
+                                <Button id="passport" variant="link" onClick={handleFormChangerReset}>
+                                    Отменить
+                                </Button>
+                            </Col>
+                        </>
+                    )}
                 </Form.Group>
             </Form>
 
@@ -245,19 +250,20 @@ export const UserForm = memo(function UserForm(props: UserFormProps) {
                         Дата рождения
                     </Form.Label>
                     <Col sm="5">
-                        <Form.Control type="date" defaultValue={userBirthDate} {...birthDateRegister("birthDate")}/>
+                        <Form.Control type="date" defaultValue={userBirthDate} {...birthDateRegister('birthDate')} />
                     </Col>
-                    {showBirthDateButton && <>
-                        <Col className='save-btn'>
-                            <Button variant="link" type="submit">
-                                Сохранить
-                            </Button>
-                            <Button id='birthDate' variant="link" onClick={handleFormChangerReset}>
-                                Отменить
-                            </Button>
-                        </Col>
-                    </>
-                    }
+                    {showBirthDateButton && (
+                        <>
+                            <Col className="save-btn">
+                                <Button variant="link" type="submit">
+                                    Сохранить
+                                </Button>
+                                <Button id="birthDate" variant="link" onClick={handleFormChangerReset}>
+                                    Отменить
+                                </Button>
+                            </Col>
+                        </>
+                    )}
                 </Form.Group>
             </Form>
 
@@ -267,23 +273,24 @@ export const UserForm = memo(function UserForm(props: UserFormProps) {
                         Email
                     </Form.Label>
                     <Col sm="5">
-                        <Form.Control type="text" defaultValue={user.email} {...emailRegister("email")}/>
+                        <Form.Control type="text" defaultValue={user.email} {...emailRegister('email')} />
                     </Col>
-                    {showEmailButton && <>
-                        <Col className='save-btn'>
-                            <Button variant="link" type="submit">
-                                Сохранить
-                            </Button>
-                            <Button id="email" variant="link" onClick={handleFormChangerReset}>
-                                Отменить
-                            </Button>
-                        </Col>
-                    </>
-                    }
+                    {showEmailButton && (
+                        <>
+                            <Col className="save-btn">
+                                <Button variant="link" type="submit">
+                                    Сохранить
+                                </Button>
+                                <Button id="email" variant="link" onClick={handleFormChangerReset}>
+                                    Отменить
+                                </Button>
+                            </Col>
+                        </>
+                    )}
                 </Form.Group>
             </Form>
 
-            <Button variant="link" onClick={handleOpenPasswordModal} className='change-pwd'>
+            <Button variant="link" onClick={handleOpenPasswordModal} className="change-pwd">
                 Изменить пароль
             </Button>
 
@@ -325,9 +332,12 @@ export const UserForm = memo(function UserForm(props: UserFormProps) {
                     <Form onSubmit={passwordHandleSubmit(handlePasswordSubmit)}>
                         <Form.Group className="mb-3">
                             <Col sm="11">
-                                <Form.Control type="password"
-                                              placeholder="Старый пароль" {...passwordRegister("password.oldPassword")}
-                                              isInvalid={oldPasswordError}/>
+                                <Form.Control
+                                    type="password"
+                                    placeholder="Старый пароль"
+                                    {...passwordRegister('password.oldPassword')}
+                                    isInvalid={oldPasswordError}
+                                />
                                 <Form.Control.Feedback type="invalid">
                                     Старый пароль введен неверно
                                 </Form.Control.Feedback>
@@ -335,15 +345,21 @@ export const UserForm = memo(function UserForm(props: UserFormProps) {
                         </Form.Group>
                         <Form.Group className="mb-3">
                             <Col sm="11">
-                                <Form.Control type="password"
-                                              placeholder="Новый пароль" {...passwordRegister("password.newPassword")}/>
+                                <Form.Control
+                                    type="password"
+                                    placeholder="Новый пароль"
+                                    {...passwordRegister('password.newPassword')}
+                                />
                             </Col>
                         </Form.Group>
                         <Form.Group className="mb-3">
                             <Col sm="11">
-                                <Form.Control type="password"
-                                              placeholder="Повторить новый пароль" {...passwordRegister("password.repeatedNewPassword")}
-                                              isInvalid={!isEqualPasswords}/>
+                                <Form.Control
+                                    type="password"
+                                    placeholder="Повторить новый пароль"
+                                    {...passwordRegister('password.repeatedNewPassword')}
+                                    isInvalid={!isEqualPasswords}
+                                />
                                 <Form.Control.Feedback type="invalid">
                                     Пароль не совпадает с введенным выше паролем
                                 </Form.Control.Feedback>
@@ -357,6 +373,6 @@ export const UserForm = memo(function UserForm(props: UserFormProps) {
                     </Form>
                 </Modal.Body>
             </Modal>
-
-        </div>)
-})
+        </div>
+    );
+});

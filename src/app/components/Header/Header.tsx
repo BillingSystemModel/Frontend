@@ -2,14 +2,14 @@ import {memo} from 'react';
 import {useQuery} from '@tanstack/react-query';
 import {CDBIcon} from 'cdbreact';
 
-import {TOKEN_KEY} from '../../routes';
 import {User} from '../../../personalAccount/types';
-import {baseURL, phoneNumber} from '../../../constants';
+import {baseURL, PHONE_KEY, TOKEN_KEY} from '../../../constants';
 
 import './Header.css';
 
 export const Header = memo(function Header() {
     const token = sessionStorage.getItem(TOKEN_KEY);
+    const phoneNumber = sessionStorage.getItem(PHONE_KEY)!;
 
     const {data: user} = useQuery<User>({
         queryKey: ['user'],
@@ -22,16 +22,18 @@ export const Header = memo(function Header() {
             }).then((res) => res.json()),
     });
     const phone =
-        '+' +
-        phoneNumber.slice(0, 1) +
-        ' ' +
-        phoneNumber.slice(1, 4) +
-        ' ' +
-        phoneNumber.slice(4, 7) +
-        ' ' +
-        phoneNumber.slice(7, 9) +
-        ' ' +
-        phoneNumber.slice(9, 11);
+        phoneNumber.slice(0, 1) === '7'
+            ? '+'
+            : '' +
+              phoneNumber.slice(0, 1) +
+              ' ' +
+              phoneNumber.slice(1, 4) +
+              ' ' +
+              phoneNumber.slice(4, 7) +
+              ' ' +
+              phoneNumber.slice(7, 9) +
+              ' ' +
+              phoneNumber.slice(9, 11);
 
     if (!user?.fio.length) {
         return null;
