@@ -62,13 +62,14 @@ export const Login = memo(function Login() {
                                 type="text"
                                 {...loginFormRegister('phoneNumber', {
                                     required: {value: true, message: 'Поле обязательно к заполнению'},
+                                    maxLength: 11,
                                     pattern: {value: /[0-9]{11}/, message: 'Номер телефона состоит только из 11 цифр'},
                                 })}
                                 onChange={() => unregisterLoginForm('phoneNumber')}
                                 isInvalid={!!errors.phoneNumber?.type}
                             />
                             <Form.Control.Feedback type="invalid">
-                                {errors.phoneNumber?.message || 'Ошибка ввода номера телефона'}
+                                {errors.phoneNumber?.message || 'Номер телефона состоит только из 11 цифр'}
                             </Form.Control.Feedback>
                         </Form.Group>
 

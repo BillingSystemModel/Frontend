@@ -1,13 +1,13 @@
-import {HTMLAttributes, memo, useState} from 'react';
+import React, {HTMLAttributes, memo, useState} from 'react';
+import classNames from 'classnames';
 import {Button, Col, Form, Modal, Row} from 'react-bootstrap';
 import {SubmitHandler, useForm} from 'react-hook-form';
 
-import './UseForm.css';
-
-import {User} from '../../../types';
-import classNames from 'classnames';
-import {baseURL, PHONE_KEY, TOKEN_KEY} from '../../../../constants';
 import {FormType, PasswordForm} from './types';
+import {User} from '../../../types';
+import {baseURL, PHONE_KEY, TOKEN_KEY} from '../../../../constants';
+
+import './UseForm.css';
 
 interface UserFormProps extends HTMLAttributes<HTMLDivElement> {
     user: User;
@@ -27,7 +27,8 @@ export const UserForm = memo(function UserForm(props: UserFormProps) {
         handleSubmit: passportHandleSubmit,
         watch: passportWatch,
         setValue: passportSetValue,
-        // formState: {errors},
+        formState: {errors: passportErrors},
+        unregister: unregisterPassport,
     } = useForm<{passport: string}>();
     const {
         register: birthDateRegister,
@@ -40,13 +41,16 @@ export const UserForm = memo(function UserForm(props: UserFormProps) {
         handleSubmit: emailHandleSubmit,
         watch: emailWatch,
         setValue: emailSetValue,
+        unregister: unregisterEmail,
+        formState: {errors: emailErrors},
     } = useForm<{email: string}>();
     const {
         register: passwordRegister,
         reset: passwordReset,
         handleSubmit: passwordHandleSubmit,
         watch: passwordWatch,
-        setValue: passwordSetValue,
+        formState: {errors: passwordErrors},
+        unregister: unregisterPassword,
     } = useForm<{password: PasswordForm}>();
 
     const userDateContract =
@@ -113,6 +117,7 @@ export const UserForm = memo(function UserForm(props: UserFormProps) {
             } else {
                 setShowPasswordModal(false);
                 setOldPasswordError(false);
+                unregisterPassword('password.oldPassword');
                 passwordReset();
             }
         } catch (err) {
@@ -158,10 +163,12 @@ export const UserForm = memo(function UserForm(props: UserFormProps) {
     const handleResetForm = () => {
         if (keyReset === 'passport') {
             passportSetValue('passport', user.passport);
+            unregisterPassport('passport');
         } else if (keyReset === 'birthDate') {
             birthDateSetValue('birthDate', userBirthDate);
         } else if (keyReset === 'email') {
             emailSetValue('email', user.email);
+            unregisterEmail('email');
         }
         setShowCancelModal(false);
     };
@@ -182,13 +189,14 @@ export const UserForm = memo(function UserForm(props: UserFormProps) {
 
     const isPasswordChangeDisabled =
         passwordWatch('password.newPassword') !== passwordWatch('password.repeatedNewPassword') ||
-        !passwordWatch('password.oldPassword') ||
         !passwordWatch('password.newPassword') ||
         !passwordWatch('password.repeatedNewPassword');
 
     const isEqualPasswords =
         passwordWatch('password.newPassword') === passwordWatch('password.repeatedNewPassword') ||
         !passwordWatch('password.repeatedNewPassword');
+
+    const nowDate = new Date().toISOString().slice(0, 10);
 
     return (
         <div className={classNames('user-form', className)}>
@@ -227,7 +235,18 @@ export const UserForm = memo(function UserForm(props: UserFormProps) {
                         Паспорт
                     </Form.Label>
                     <Col sm="5">
-                        <Form.Control type="text" defaultValue={user.passport} {...passportRegister('passport')} />
+                        <Form.Control
+                            type="text"
+                            defaultValue={user.passport}
+                            {...passportRegister('passport', {
+                                maxLength: 10,
+                                pattern: {value: /[0-9]{10}/, message: 'Паспорт состоит только из 10 цифр'},
+                            })}
+                            isInvalid={!!passportErrors.passport?.type}
+                        />
+                        <Form.Control.Feedback type="invalid">
+                            {passportErrors.passport?.message || 'Паспорт состоит только из 10 цифр'}
+                        </Form.Control.Feedback>
                     </Col>
                     {showPassportButton && (
                         <>
@@ -250,7 +269,12 @@ export const UserForm = memo(function UserForm(props: UserFormProps) {
                         Дата рождения
                     </Form.Label>
                     <Col sm="5">
-                        <Form.Control type="date" defaultValue={userBirthDate} {...birthDateRegister('birthDate')} />
+                        <Form.Control
+                            type="date"
+                            max={nowDate}
+                            defaultValue={userBirthDate}
+                            {...birthDateRegister('birthDate')}
+                        />
                     </Col>
                     {showBirthDateButton && (
                         <>
@@ -273,7 +297,20 @@ export const UserForm = memo(function UserForm(props: UserFormProps) {
                         Email
                     </Form.Label>
                     <Col sm="5">
-                        <Form.Control type="text" defaultValue={user.email} {...emailRegister('email')} />
+                        <Form.Control
+                            type="text"
+                            defaultValue={user.email}
+                            {...emailRegister('email', {
+                                pattern: {
+                                    value: /^[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+$/,
+                                    message: 'Email введен некорректно',
+                                },
+                            })}
+                            isInvalid={!!emailErrors.email?.type}
+                        />
+                        <Form.Control.Feedback type="invalid">
+                            {emailErrors.email?.message || 'Ошибка ввода email'}
+                        </Form.Control.Feedback>
                     </Col>
                     {showEmailButton && (
                         <>
@@ -335,11 +372,28 @@ export const UserForm = memo(function UserForm(props: UserFormProps) {
                                 <Form.Control
                                     type="password"
                                     placeholder="Старый пароль"
-                                    {...passwordRegister('password.oldPassword')}
-                                    isInvalid={oldPasswordError}
+                                    {...passwordRegister('password.oldPassword', {
+                                        required: {value: true, message: 'Поле обязательно к заполнению'},
+                                        minLength: {value: 6, message: 'Пароль должен содержать не менее 6 символов'},
+                                        pattern: {
+                                            value: /^[^' ]/,
+                                            message: 'Пароль не может начинаться с пробела/пробелов',
+                                        },
+                                        validate: {
+                                            validateNumber: (value) => {
+                                                return /^[a-zA-z0-9 !"#$%&'()*+\-./:;<=>?@[\]^_`{|}]*$/.test(value);
+                                            },
+                                        },
+                                    })}
+                                    onChange={() => {
+                                        unregisterPassword('password.oldPassword');
+                                        setOldPasswordError(false);
+                                    }}
+                                    isInvalid={oldPasswordError || !!passwordErrors.password?.oldPassword?.type}
                                 />
                                 <Form.Control.Feedback type="invalid">
-                                    Старый пароль введен неверно
+                                    {passwordErrors.password?.oldPassword?.message ||
+                                        'Старый пароль введен неверно или имеет недопустимые символы'}
                                 </Form.Control.Feedback>
                             </Col>
                         </Form.Group>
@@ -348,8 +402,24 @@ export const UserForm = memo(function UserForm(props: UserFormProps) {
                                 <Form.Control
                                     type="password"
                                     placeholder="Новый пароль"
-                                    {...passwordRegister('password.newPassword')}
+                                    {...passwordRegister('password.newPassword', {
+                                        minLength: {value: 6, message: 'Пароль должен содержать не менее 6 символов'},
+                                        pattern: {
+                                            value: /^[^' ]/,
+                                            message: 'Пароль не может начинаться с пробела/пробелов',
+                                        },
+                                        validate: {
+                                            validateNumber: (value) => {
+                                                return /^[a-zA-z0-9 !"#$%&'()*+\-./:;<=>?@[\]^_`{|}]*$/.test(value);
+                                            },
+                                        },
+                                    })}
+                                    isInvalid={!!passwordErrors.password?.newPassword?.type}
                                 />
+                                <Form.Control.Feedback type="invalid">
+                                    {passwordErrors.password?.newPassword?.message ||
+                                        'Пароль содержит недопустимые символы'}
+                                </Form.Control.Feedback>
                             </Col>
                         </Form.Group>
                         <Form.Group className="mb-3">
@@ -357,11 +427,25 @@ export const UserForm = memo(function UserForm(props: UserFormProps) {
                                 <Form.Control
                                     type="password"
                                     placeholder="Повторить новый пароль"
-                                    {...passwordRegister('password.repeatedNewPassword')}
-                                    isInvalid={!isEqualPasswords}
+                                    {...passwordRegister('password.repeatedNewPassword', {
+                                        minLength: {value: 6, message: 'Пароль должен содержать не менее 6 символов'},
+                                        pattern: {
+                                            value: /^[^' ]/,
+                                            message: 'Пароль не может начинаться с пробела/пробелов',
+                                        },
+                                        validate: {
+                                            validateNumber: (value) => {
+                                                return /^[a-zA-z0-9 !"#$%&'()*+\-./:;<=>?@[\]^_`{|}]*$/.test(value);
+                                            },
+                                        },
+                                    })}
+                                    isInvalid={
+                                        !!passwordErrors.password?.repeatedNewPassword?.type || !isEqualPasswords
+                                    }
                                 />
                                 <Form.Control.Feedback type="invalid">
-                                    Пароль не совпадает с введенным выше паролем
+                                    {passwordErrors.password?.repeatedNewPassword?.message ||
+                                        'Пароль не совпадает с введенным выше паролем или имеет не допустимые символы'}
                                 </Form.Control.Feedback>
                             </Col>
                         </Form.Group>
