@@ -59,7 +59,7 @@ export const SideMenu = memo(function SideMenu() {
                             <a href={Routes.TARIFFS}>Тарифы</a>
                         </CDBSidebarMenuItem>
                         <CDBSidebarMenuItem className="side-menu-item" icon="bi bi-newspaper">
-                            <a href={Routes.REPORT}>Отчеты</a>
+                            <a href={Routes.REPORTS}>Отчеты</a>
                         </CDBSidebarMenuItem>
                     </CDBSidebarMenu>
                 </CDBSidebarContent>

@@ -85,7 +85,6 @@ export const UserForm = memo(function UserForm(props: UserFormProps) {
             newPassword: data.password.repeatedNewPassword,
         };
 
-
         try {
             const res = await fetch(`${baseURL}/auth/changePassword`, {
                 method: 'POST',
