@@ -1,7 +1,8 @@
-import {memo, useState} from 'react';
+import {memo, useRef, useState} from 'react';
 import {Button, Col, Form, Row, Table} from 'react-bootstrap';
 import DatePicker from 'react-datepicker';
 import {RotateLoader} from 'react-spinners';
+import {useDownloadExcel} from 'react-export-table-to-excel';
 
 import {baseURL, PHONE_KEY, TOKEN_KEY} from '../constants';
 
@@ -32,6 +33,8 @@ export const Reports = memo(function Reports() {
     const [endDate, setEndDate] = useState(date);
     const [report, setReport] = useState<Report>();
     const [isLoading, setIsLoading] = useState(false);
+    const [isGenerated, setIsGenerated] = useState(false);
+    const tableRef = useRef(null);
 
     const months = [
         'Январь',
@@ -57,7 +60,11 @@ export const Reports = memo(function Reports() {
         },
     } as Locale;
 
-    const handleDownloadReport = () => {};
+    const {onDownload: handleDownloadReport} = useDownloadExcel({
+        currentTableRef: tableRef.current,
+        filename: 'report',
+        sheet: 'Report'
+    })
 
     const handleChangeStartDate = (e: Date) => {
         setStartDate(e);
@@ -103,10 +110,10 @@ export const Reports = memo(function Reports() {
                 },
             );
 
-            console.log(res);
             const response = await res.json();
             setReport(response);
             setIsLoading(false);
+            setIsGenerated(true);
 
             if (!res.ok) {
                 const message = `An error has occured: ${res.status} - ${res.statusText}`;
@@ -159,7 +166,8 @@ export const Reports = memo(function Reports() {
                                 </Button>
                             </Col>
                             <Col sm="3">
-                                <Button variant="primary" className="w-100" onClick={handleDownloadReport}>
+                                <Button variant="primary" className="w-100" onClick={handleDownloadReport}
+                                        disabled={!isGenerated}>
                                     Скачать
                                 </Button>
                             </Col>
@@ -174,7 +182,7 @@ export const Reports = memo(function Reports() {
                     <RotateLoader className="text-center m-auto" color="#5c31f1" size={35} margin={40} />
                 </div>
             )}
-            <Table striped hover>
+            <Table striped hover ref={tableRef}>
                 <thead>
                     <tr>
                         <th>#</th>
@@ -207,9 +215,15 @@ export const Reports = memo(function Reports() {
                                 </tr>
                             );
                         })}
+                {!isLoading && report && <tr>
+                    <td colSpan={4}>
+                        <h6 style={{float: 'right'}}>
+                            Всего: {report?.totalCost} ₽
+                        </h6>
+                    </td>
+                </tr>}
                 </tbody>
             </Table>
-            {!isLoading && report && <h5 className="report-result">Всего: {report?.totalCost} ₽</h5>}
             <br />
         </div>
     );
