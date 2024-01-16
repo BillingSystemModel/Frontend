@@ -1,4 +1,4 @@
-import {memo, useCallback, useMemo, useState} from 'react';
+import React, {memo, useCallback, useMemo, useState} from 'react';
 import {useQuery} from '@tanstack/react-query';
 import {RotateLoader} from 'react-spinners';
 import {Alert, Button, Col, Form, InputGroup, Modal, Row} from 'react-bootstrap';
@@ -43,7 +43,8 @@ export const Tariffs = memo(function Tariffs() {
     const {
         register: filtersTariffRegister,
         handleSubmit: filtersTariffHandleSubmit,
-        // formState: {errors},
+        formState: {errors},
+        unregister: unregisterFiltersTariffs,
     } = useForm<FiltersTariffs>();
 
     const [search, setSearch] = useState<string>();
@@ -115,13 +116,33 @@ export const Tariffs = memo(function Tariffs() {
                                 <Col sm="3">
                                     <InputGroup className="mb-2">
                                         <InputGroup.Text>от</InputGroup.Text>
-                                        <Form.Control placeholder="0" {...filtersTariffRegister('costTariff.min')} />
+                                        <Form.Control
+                                            placeholder="0"
+                                            {...filtersTariffRegister('costTariff.min', {
+                                                validate: {
+                                                    positive: (v) => Number(v) >= 0,
+                                                },
+                                            })}
+                                            onChange={() => unregisterFiltersTariffs('costTariff.min')}
+                                            isInvalid={!!errors.costTariff?.min?.type}
+                                        />
+                                        <Form.Control.Feedback type="invalid">Число больше нуля</Form.Control.Feedback>
                                     </InputGroup>
                                 </Col>
                                 <Col sm="3">
                                     <InputGroup className="mb-2">
                                         <InputGroup.Text>до</InputGroup.Text>
-                                        <Form.Control placeholder="0" {...filtersTariffRegister('costTariff.max')} />
+                                        <Form.Control
+                                            placeholder="0"
+                                            {...filtersTariffRegister('costTariff.max', {
+                                                validate: {
+                                                    positive: (v) => Number(v) >= 0,
+                                                },
+                                            })}
+                                            onChange={() => unregisterFiltersTariffs('costTariff.max')}
+                                            isInvalid={!!errors.costTariff?.max?.type}
+                                        />
+                                        <Form.Control.Feedback type="invalid">Число больше нуля</Form.Control.Feedback>
                                     </InputGroup>
                                 </Col>
                             </Form.Group>
@@ -133,13 +154,33 @@ export const Tariffs = memo(function Tariffs() {
                                 <Col sm="3">
                                     <InputGroup className="mb-2">
                                         <InputGroup.Text>от</InputGroup.Text>
-                                        <Form.Control placeholder="0" {...filtersTariffRegister('minutesTariff.min')} />
+                                        <Form.Control
+                                            placeholder="0"
+                                            {...filtersTariffRegister('minutesTariff.min', {
+                                                validate: {
+                                                    positive: (v) => Number(v) >= 0,
+                                                },
+                                            })}
+                                            onChange={() => unregisterFiltersTariffs('minutesTariff.min')}
+                                            isInvalid={!!errors.minutesTariff?.min?.type}
+                                        />
+                                        <Form.Control.Feedback type="invalid">Число больше нуля</Form.Control.Feedback>
                                     </InputGroup>
                                 </Col>
                                 <Col sm="3">
                                     <InputGroup className="mb-2">
                                         <InputGroup.Text>до</InputGroup.Text>
-                                        <Form.Control placeholder="0" {...filtersTariffRegister('minutesTariff.max')} />
+                                        <Form.Control
+                                            placeholder="0"
+                                            {...filtersTariffRegister('minutesTariff.max', {
+                                                validate: {
+                                                    positive: (v) => Number(v) >= 0,
+                                                },
+                                            })}
+                                            onChange={() => unregisterFiltersTariffs('minutesTariff.max')}
+                                            isInvalid={!!errors.minutesTariff?.max?.type}
+                                        />
+                                        <Form.Control.Feedback type="invalid">Число больше нуля</Form.Control.Feedback>
                                     </InputGroup>
                                 </Col>
                             </Form.Group>
@@ -153,8 +194,15 @@ export const Tariffs = memo(function Tariffs() {
                                         <InputGroup.Text>от</InputGroup.Text>
                                         <Form.Control
                                             placeholder="0"
-                                            {...filtersTariffRegister('internetTariff.min')}
+                                            {...filtersTariffRegister('internetTariff.min', {
+                                                validate: {
+                                                    positive: (v) => Number(v) >= 0,
+                                                },
+                                            })}
+                                            onChange={() => unregisterFiltersTariffs('internetTariff.min')}
+                                            isInvalid={!!errors.minutesTariff?.min?.type}
                                         />
+                                        <Form.Control.Feedback type="invalid">Число больше нуля</Form.Control.Feedback>
                                     </InputGroup>
                                 </Col>
                                 <Col sm="3">
@@ -162,8 +210,15 @@ export const Tariffs = memo(function Tariffs() {
                                         <InputGroup.Text>до</InputGroup.Text>
                                         <Form.Control
                                             placeholder="0"
-                                            {...filtersTariffRegister('internetTariff.max')}
+                                            {...filtersTariffRegister('internetTariff.max', {
+                                                validate: {
+                                                    positive: (v) => Number(v) >= 0,
+                                                },
+                                            })}
+                                            onChange={() => unregisterFiltersTariffs('internetTariff.max')}
+                                            isInvalid={!!errors.minutesTariff?.max?.type}
                                         />
+                                        <Form.Control.Feedback type="invalid">Число больше нуля</Form.Control.Feedback>
                                     </InputGroup>
                                 </Col>
                             </Form.Group>
@@ -175,13 +230,33 @@ export const Tariffs = memo(function Tariffs() {
                                 <Col sm="3">
                                     <InputGroup className="mb-2">
                                         <InputGroup.Text>от</InputGroup.Text>
-                                        <Form.Control placeholder="0" {...filtersTariffRegister('smsTariff.min')} />
+                                        <Form.Control
+                                            placeholder="0"
+                                            {...filtersTariffRegister('smsTariff.min', {
+                                                validate: {
+                                                    positive: (v) => Number(v) >= 0,
+                                                },
+                                            })}
+                                            onChange={() => unregisterFiltersTariffs('smsTariff.min')}
+                                            isInvalid={!!errors.smsTariff?.min?.type}
+                                        />
+                                        <Form.Control.Feedback type="invalid">Число больше нуля</Form.Control.Feedback>
                                     </InputGroup>
                                 </Col>
                                 <Col sm="3">
                                     <InputGroup className="mb-2">
                                         <InputGroup.Text>до</InputGroup.Text>
-                                        <Form.Control placeholder="0" {...filtersTariffRegister('smsTariff.max')} />
+                                        <Form.Control
+                                            placeholder="0"
+                                            {...filtersTariffRegister('smsTariff.max', {
+                                                validate: {
+                                                    positive: (v) => Number(v) >= 0,
+                                                },
+                                            })}
+                                            onChange={() => unregisterFiltersTariffs('smsTariff.max')}
+                                            isInvalid={!!errors.smsTariff?.max?.type}
+                                        />
+                                        <Form.Control.Feedback type="invalid">Число больше нуля</Form.Control.Feedback>
                                     </InputGroup>
                                 </Col>
                             </Form.Group>
