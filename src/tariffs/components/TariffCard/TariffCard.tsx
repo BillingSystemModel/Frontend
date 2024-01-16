@@ -7,6 +7,7 @@ import '../TariffSlider/TariffSlider.css';
 import {getTariffCost} from '../../logic/filterTariffs';
 import {baseURL, phoneNumber} from '../../../constants';
 import {TOKEN_KEY} from '../../../app';
+import {getTariffSMSCount} from "../../logic/tariffSMS";
 
 export interface PropsTariff {
     tariff: Tariff;
@@ -51,11 +52,13 @@ export const TariffCard = memo(function TariffCard({tariff, tariffId, onSetTarif
         setShowModal(false);
     }, [setShowModal]);
 
+    const messagesCount = getTariffSMSCount(tariff.id);
+
     return (
         <li className="card">
             <Card.Body className="tariff-card-body">
                 <Card.Title>
-                    {id} - {title}
+                    {title}
                 </Card.Title>
                 <Card.Subtitle className="mb-2 text-muted">{description}</Card.Subtitle>
                 <div>
@@ -66,11 +69,10 @@ export const TariffCard = memo(function TariffCard({tariff, tariffId, onSetTarif
                         Кол-во минут - <span className="fw-bold">{telephonyPackage?.packOfMinutes ?? 0}</span>
                     </div>
                     <div>
-                        Кол-во сообщений - <span className="fw-bold">0</span>
+                        Кол-во сообщений - <span className="fw-bold">{messagesCount}</span>
                     </div>
                     <div>
-                        Кол-во Гб интернета -
-                        <span className="fw-bold">{Number((internetPackage?.packOfMB ?? 0) / 1024).toFixed(2)}</span>
+                        Кол-во Гб интернета - <span className="fw-bold">{Number((internetPackage?.packOfMB ?? 0) / 1024).toFixed(2)}</span>
                     </div>
                 </div>
                 <Button className="tariff-card-submit" onClick={handleOpen} disabled={id === tariffId}>

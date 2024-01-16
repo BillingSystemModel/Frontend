@@ -174,7 +174,7 @@ export const Reports = memo(function Reports() {
                 </tr>
                 </thead>
                 <tbody>
-                {!isLoading && report?.callsList.map((call, index) => {
+                {!isLoading && report?.callsList?.map((call, index) => {
                     const callType = call.callTypeCode === '01' ? 'Входящий' : 'Исходящий';
                     const duration = call.duration.slice(2).split('M');
                     const secondsValue = duration[1].slice(0, -1);
@@ -191,7 +191,7 @@ export const Reports = memo(function Reports() {
                 })}
                 </tbody>
             </Table>
-            {!isLoading && <h5 className="report-result">Всего: {report?.totalCost} ₽</h5>}
+            {!isLoading && report && <h5 className="report-result">Всего: {report?.totalCost} ₽</h5>}
             <br/>
         </div>
     )
