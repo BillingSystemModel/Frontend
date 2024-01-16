@@ -5,6 +5,6 @@ export enum Routes {
   PERSONAL_ACCOUNT = "/personalAccount",
   PERSONAL_DATA = "/personalAccount/personalData",
   TARIFF = "/personalAccount/tariff",
-  REPORT = "/report",
+  REPORTS = "/reports",
   TARIFFS = "/tariffs",
 }

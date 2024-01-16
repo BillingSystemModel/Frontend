@@ -10,6 +10,7 @@ import {PersonalAccount} from '../../personalAccount/PersonalAccount';
 import {PersonalData} from '../../personalAccount/personalData';
 import {Tariff} from '../../personalAccount/tariff';
 import {Register} from '../../register';
+import {Reports} from "../../reports";
 
 export const Router = memo(function Router() {
     const router = useMemo(
@@ -27,10 +28,11 @@ export const Router = memo(function Router() {
                                 </RequireAuth>
                             }
                         >
-                            {/*Сюда помещаем роуты*/}
 
                             {/*Тарифы*/}
                             <Route path={Routes.TARIFFS} element={<Tariffs />} />
+
+                            <Route path={Routes.REPORTS} element={<Reports />} />
 
                             {/*Личный кабинет*/}
                             <Route path={Routes.PERSONAL_ACCOUNT} element={<PersonalAccount />}>
