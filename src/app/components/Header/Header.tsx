@@ -24,13 +24,13 @@ export const Header = memo(function Header() {
     const phone =
         (phoneNumber.slice(0, 1) === '7' ? '+' : '') +
         phoneNumber.slice(0, 1) +
-        ' ' +
+        ' (' +
         phoneNumber.slice(1, 4) +
-        ' ' +
+        ') ' +
         phoneNumber.slice(4, 7) +
-        ' ' +
+        '-' +
         phoneNumber.slice(7, 9) +
-        ' ' +
+        '-' +
         phoneNumber.slice(9, 11);
 
     if (!user?.fio.length) {
