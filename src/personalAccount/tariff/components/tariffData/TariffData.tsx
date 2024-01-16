@@ -1,6 +1,10 @@
 import {memo} from "react";
 import {Heading} from "../../../components";
 
-export const TariffData = memo(function TariffData(){
-    return <Heading header="Тариф" description="МЕГА ТАРИФ. МЕГА ВЫГОДА" />
+interface TariffDataProps {
+    title: string;
+}
+
+export const TariffData = memo(function TariffData({title}: TariffDataProps){
+    return <Heading header="Тариф" description={title} />
 })

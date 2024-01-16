@@ -49,7 +49,6 @@ export const UserForm = memo(function UserForm(props: UserFormProps) {
         reset: passwordReset,
         handleSubmit: passwordHandleSubmit,
         watch: passwordWatch,
-        setValue: passwordSetValue,
         // formState: {errors},
     } = useForm<{ password: PasswordForm }>();
 

@@ -13,8 +13,8 @@ export const PersonalAccount = memo(function PersonalAccount() {
 
     return (<>
             <Tabs activeKey={key} onSelect={handleSelectKey}>
-                <Tab eventKey='personalData' title='Личные данные'><PersonalData/></Tab>
-                <Tab eventKey='tariff' title='Тариф'><Tariff/></Tab>
+                <Tab eventKey='personalData' title='Личные данные'><PersonalData /></Tab>
+                <Tab eventKey='tariff' title='Тариф'><Tariff /></Tab>
             </Tabs>
             <Outlet/>
         </>
