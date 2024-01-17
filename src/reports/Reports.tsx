@@ -63,8 +63,8 @@ export const Reports = memo(function Reports() {
     const {onDownload: handleDownloadReport} = useDownloadExcel({
         currentTableRef: tableRef.current,
         filename: 'report',
-        sheet: 'Report'
-    })
+        sheet: 'Report',
+    });
 
     const handleChangeStartDate = (e: Date) => {
         setStartDate(e);
@@ -126,7 +126,7 @@ export const Reports = memo(function Reports() {
 
     const handleKeyboardDateInput = (e: any) => {
         e.preventDefault();
-    }
+    };
 
     return (
         <div className="m-4">
@@ -172,8 +172,12 @@ export const Reports = memo(function Reports() {
                                 </Button>
                             </Col>
                             <Col sm="3">
-                                <Button variant="primary" className="w-100" onClick={handleDownloadReport}
-                                        disabled={!isGenerated}>
+                                <Button
+                                    variant="primary"
+                                    className="w-100"
+                                    onClick={handleDownloadReport}
+                                    disabled={!isGenerated}
+                                >
                                     Скачать
                                 </Button>
                             </Col>
@@ -182,55 +186,57 @@ export const Reports = memo(function Reports() {
                 </Form>
             </div>
             <h5 className="report-heading">Отчет</h5>
-            <hr className="hr-report"/>
+            <hr className="hr-report" />
             {isLoading && (
                 <div className="report-spinner">
-                    <RotateLoader className="text-center m-auto" color="#5c31f1" size={35} margin={40}/>
+                    <RotateLoader className="text-center m-auto" color="#5c31f1" size={35} margin={40} />
                 </div>
             )}
             <Table striped hover ref={tableRef}>
                 <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Тип звонка</th>
-                    <th>Минуты</th>
-                    <th>Стоимость</th>
-                </tr>
+                    <tr>
+                        <th>#</th>
+                        <th>Тип звонка</th>
+                        <th>Минуты</th>
+                        <th>Стоимость</th>
+                    </tr>
                 </thead>
                 <tbody>
-                {!isLoading &&
-                    report?.callsList?.map((call, index) => {
-                        const callType = call.callTypeCode === '01' ? 'Входящий' : 'Исходящий';
-                        const duration = call.duration.slice(2).split('M');
-                        const secondsValue = duration[1].slice(0, -1);
-                        const seconds =
-                            secondsValue.length === 1
-                                ? `0${secondsValue}`
-                                : secondsValue.length === 2
-                                    ? secondsValue
-                                    : '00';
-                        const minutes = duration[0].length === 1 ? `0${duration[0]}` : duration[0];
-                        const resultDuration = `${minutes}:${seconds}`;
+                    {!isLoading &&
+                        report?.callsList?.map((call, index) => {
+                            const callType = call.callTypeCode === '01' ? 'Входящий' : 'Исходящий';
+                            const duration = call.duration.includes('M')
+                                ? call.duration.slice(2).split('M')
+                                : ['00', call.duration.slice(2)];
+                            const secondsValue = duration[1].slice(0, -1);
+                            const seconds =
+                                secondsValue.length === 1
+                                    ? `0${secondsValue}`
+                                    : secondsValue.length === 2
+                                      ? secondsValue
+                                      : '00';
+                            const minutes = duration[0].length === 1 ? `0${duration[0]}` : duration[0];
+                            const resultDuration = `${minutes}:${seconds}`;
 
-                        return (
-                            <tr key={index}>
-                                <td>{index + 1}</td>
-                                <td>{callType}</td>
-                                <td>{resultDuration}</td>
-                                <td>{call.cost}</td>
-                            </tr>
-                        );
-                    })}
-                {!isLoading && report && <tr>
-                    <td colSpan={4}>
-                        <h6 style={{float: 'right'}}>
-                            Всего: {report?.totalCost} ₽
-                        </h6>
-                    </td>
-                </tr>}
+                            return (
+                                <tr key={index}>
+                                    <td>{index + 1}</td>
+                                    <td>{callType}</td>
+                                    <td>{resultDuration}</td>
+                                    <td>{call.cost}</td>
+                                </tr>
+                            );
+                        })}
+                    {!isLoading && report && (
+                        <tr>
+                            <td colSpan={4}>
+                                <h6 style={{float: 'right'}}>Всего: {report?.totalCost} ₽</h6>
+                            </td>
+                        </tr>
+                    )}
                 </tbody>
             </Table>
-            <br/>
+            <br />
         </div>
     );
 });
