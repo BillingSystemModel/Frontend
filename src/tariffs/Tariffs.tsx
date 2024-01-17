@@ -200,7 +200,7 @@ export const Tariffs = memo(function Tariffs() {
                                                 },
                                             })}
                                             onChange={() => unregisterFiltersTariffs('internetTariff.min')}
-                                            isInvalid={!!errors.minutesTariff?.min?.type}
+                                            isInvalid={!!errors.internetTariff?.min?.type}
                                         />
                                         <Form.Control.Feedback type="invalid">Число больше нуля</Form.Control.Feedback>
                                     </InputGroup>
@@ -216,7 +216,7 @@ export const Tariffs = memo(function Tariffs() {
                                                 },
                                             })}
                                             onChange={() => unregisterFiltersTariffs('internetTariff.max')}
-                                            isInvalid={!!errors.minutesTariff?.max?.type}
+                                            isInvalid={!!errors.internetTariff?.max?.type}
                                         />
                                         <Form.Control.Feedback type="invalid">Число больше нуля</Form.Control.Feedback>
                                     </InputGroup>
