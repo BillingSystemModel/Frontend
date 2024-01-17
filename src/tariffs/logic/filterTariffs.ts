@@ -1,4 +1,5 @@
 import {FiltersTariffs, Tariff} from '../types';
+import {getTariffSMSCount} from './tariffSMS';
 
 export const filterTariffs = (
     tariffs: Tariff[] | undefined,
@@ -69,8 +70,9 @@ const filterTariff = (tariff: Tariff, filters?: FiltersTariffs) => {
         }
     }
 
+    const smsCount = getTariffSMSCount(tariff.id);
     if (smsTariff.min) {
-        checked = !!Number(internetTariff.min);
+        checked = smsCount >= Number(smsTariff.min);
 
         if (!checked) {
             return false;
@@ -78,7 +80,7 @@ const filterTariff = (tariff: Tariff, filters?: FiltersTariffs) => {
     }
 
     if (smsTariff.max) {
-        checked = 0 <= Number(internetTariff.max);
+        checked = smsCount <= Number(smsTariff.max);
 
         if (!checked) {
             return false;

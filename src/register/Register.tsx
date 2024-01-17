@@ -78,7 +78,7 @@ export const Register = memo(function Register() {
                                         message: 'Фамилия и Имя должны содержать не более 100 символов',
                                     },
                                     pattern: {
-                                        value: /^[a-zA-Z ]*$/u,
+                                        value: /^[A-Za-zА-яЁё ]*$/,
                                         message: 'Имя должно содержать алфавитные символы',
                                     },
                                 })}
