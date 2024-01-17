@@ -2,7 +2,7 @@ import {FiltersTariffs, Tariff} from '../types';
 
 export const filterTariffs = (
     tariffs: Tariff[] | undefined,
-    {search, filters}: {search?: string; filters?: FiltersTariffs},
+    {search, filters}: { search?: string; filters?: FiltersTariffs },
 ) => {
     if (!search && !filters) {
         return tariffs;
@@ -108,5 +108,5 @@ export const getTariffCost = (tariff: Tariff) => {
             : internetPackage?.packCost || 0;
     };
 
-    return tariffCostInternet() + tariffCostMinutes();
+    return (tariffCostInternet() + tariffCostMinutes()) * 10;
 };

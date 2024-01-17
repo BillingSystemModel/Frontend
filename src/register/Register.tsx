@@ -23,8 +23,6 @@ export const Register = memo(function Register() {
 
     const isPasswordChangeDisabled = registerFormWatch('password') !== registerFormWatch('repeatPassword');
 
-    console.log(isPasswordChangeDisabled, registerFormWatch('password'), registerFormWatch('repeatPassword'));
-
     const [errorSubmit, setErrorSubmit] = useState(false);
 
     const handleSubmit: SubmitHandler<RegisterForm> = async ({fullName, phoneNumber, password}) => {
@@ -61,7 +59,7 @@ export const Register = memo(function Register() {
 
     return (
         <div className="register-page">
-            <LeftPanelLogo />
+            <LeftPanelLogo/>
             <div className="register-right-panel">
                 <div className="register-form-container">
                     <div className="register-form-title-container">
@@ -126,7 +124,6 @@ export const Register = memo(function Register() {
                                         },
                                     },
                                 })}
-                                // onChange={() => unregisterRegisterForm('password')}
                                 isInvalid={!!errors.password?.type}
                             />
                             <Form.Control.Feedback type="invalid">
@@ -160,7 +157,7 @@ export const Register = memo(function Register() {
                         </Form.Group>
 
                         <Alert variant="danger" show={errorSubmit}>
-                            Ошибка регистрации
+                            Пользователь с таким номером телефона уже существует
                         </Alert>
 
                         <Alert variant="danger" show={isPasswordChangeDisabled}>

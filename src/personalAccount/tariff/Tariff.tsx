@@ -1,7 +1,7 @@
 import {memo} from 'react';
 import {TariffData} from './components/tariffData';
 import {TariffDescription} from './components/tariffDescription';
-import {Button} from 'react-bootstrap';
+import {Alert, Button} from 'react-bootstrap';
 import {Routes} from '../../app';
 import {baseURL, PHONE_KEY, TOKEN_KEY} from '../../constants';
 import {Tariff as TariffInfo} from '../../tariffs/types';
@@ -25,7 +25,7 @@ export const Tariff = memo(function Tariff() {
             }).then((res) => res.json()),
     });
 
-    const {data: tariffRes} = useQuery<{tariff: TariffInfo}>({
+    const {data: tariffRes} = useQuery<{ tariff: TariffInfo }>({
         queryKey: ['tariff'],
         queryFn: () =>
             fetch(`${baseURL}/tariff/${phoneNumber}`, {
@@ -44,11 +44,21 @@ export const Tariff = memo(function Tariff() {
         return null;
     }
 
+    if (tariffRes.tariff?.id === null) {
+        return (
+            <div className="m-4">
+                <Alert className="center">Тариф не подключен</Alert>
+                <Button variant="primary" className="mt-3" onClick={handleChangeTariff}>
+                    ПОДКЛЮЧИТЬ ТАРИФ
+                </Button>
+            </div>)
+    }
+
     return (
         <div className="m-4">
-            <TariffData title={tariffRes?.tariff?.title ?? ''} />
+            <TariffData title={tariffRes?.tariff?.title ?? ''}/>
             <div className="mt-4">
-                <TariffDescription tariff={tariffRes?.tariff} contractDate={user.contractDate} />
+                <TariffDescription tariff={tariffRes?.tariff} contractDate={user.contractDate}/>
             </div>
             <Button variant="primary" className="mt-3" onClick={handleChangeTariff}>
                 ИЗМЕНИТЬ ТАРИФ

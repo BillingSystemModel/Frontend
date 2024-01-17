@@ -1,11 +1,12 @@
 import {memo} from "react";
 import {Col, Container, Row} from "react-bootstrap";
 
-import './TariffDescription.css';
 import {Tariff} from "../../../../tariffs/types";
 import {getTariffCost} from "../../../../tariffs/logic/filterTariffs";
 import {getTariffSMSCount} from "../../../../tariffs/logic/tariffSMS";
 import {getNearestWithdrawal} from "../../logic/tariffDate";
+
+import './TariffDescription.css';
 
 interface TariffDescriptionProps {
     tariff: Tariff;
