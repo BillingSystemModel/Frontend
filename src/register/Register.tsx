@@ -59,7 +59,7 @@ export const Register = memo(function Register() {
 
     return (
         <div className="register-page">
-            <LeftPanelLogo/>
+            <LeftPanelLogo />
             <div className="register-right-panel">
                 <div className="register-form-container">
                     <div className="register-form-title-container">
@@ -97,6 +97,7 @@ export const Register = memo(function Register() {
                                 {...registerFormRegister('phoneNumber')}
                                 {...registerFormRegister('phoneNumber', {
                                     required: {value: true, message: 'Поле обязательно к заполнению'},
+                                    maxLength: 11,
                                     pattern: {value: /[0-9]{11}/, message: 'Номер телефона состоит только из 11 цифр'},
                                 })}
                                 onChange={() => unregisterRegisterForm('phoneNumber')}

@@ -3,7 +3,7 @@ import {getTariffSMSCount} from './tariffSMS';
 
 export const filterTariffs = (
     tariffs: Tariff[] | undefined,
-    {search, filters}: { search?: string; filters?: FiltersTariffs },
+    {search, filters}: {search?: string; filters?: FiltersTariffs},
 ) => {
     if (!search && !filters) {
         return tariffs;
@@ -14,7 +14,7 @@ export const filterTariffs = (
     return filteredTariffsBySearch?.filter((tariff) => filterTariff(tariff, filters));
 };
 
-const filterTariff = (tariff: Tariff, filters?: FiltersTariffs) => {
+export const filterTariff = (tariff: Tariff, filters?: FiltersTariffs) => {
     if (!filters) {
         return true;
     }
