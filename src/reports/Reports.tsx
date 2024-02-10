@@ -167,7 +167,12 @@ export const Reports = memo(function Reports() {
                     <Col className="reports-btn">
                         <Row>
                             <Col sm="3">
-                                <Button variant="primary" onClick={handleGenerateReport} className="w-100">
+                                <Button
+                                    variant="primary"
+                                    onClick={handleGenerateReport}
+                                    className="w-100"
+                                    data-testid="generateReportButton"
+                                >
                                     Сгенерировать
                                 </Button>
                             </Col>
@@ -188,7 +193,7 @@ export const Reports = memo(function Reports() {
             <h5 className="report-heading">Отчет</h5>
             <hr className="hr-report" />
             {isLoading && (
-                <div className="report-spinner">
+                <div className="report-spinner" data-testid="reportSpinner">
                     <RotateLoader className="text-center m-auto" color="#5c31f1" size={35} margin={40} />
                 </div>
             )}
