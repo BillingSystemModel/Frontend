@@ -1,6 +1,5 @@
 import {memo} from 'react';
 import {useQuery} from '@tanstack/react-query';
-import {CDBIcon} from 'cdbreact';
 
 import {User} from '../../../personalAccount/types';
 import {baseURL, PHONE_KEY, TOKEN_KEY} from '../../../constants';
@@ -40,7 +39,8 @@ export const Header = memo(function Header() {
     return (
         <div className="header-container">
             <div className="header-data-container">
-                <CDBIcon icon="bi bi-person-fill" className="header-icon" size="lg" />
+                <i className="bi-person-fill header-icon"></i>
+
                 <div className="header-container-info-user">
                     <span className="fs-6">{user?.fio}</span>
                     <span className="fs-6" style={{marginTop: '-4px'}}>

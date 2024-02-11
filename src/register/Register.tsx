@@ -58,7 +58,7 @@ export const Register = memo(function Register() {
     };
 
     return (
-        <div className="register-page">
+        <div className="register-page" data-testid="registerPage">
             <LeftPanelLogo />
             <div className="register-right-panel">
                 <div className="register-form-container">

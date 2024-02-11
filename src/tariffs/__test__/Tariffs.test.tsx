@@ -47,7 +47,6 @@ const tariff2: Tariff = {
 vi.mock('@tanstack/react-query', () => ({
     useQuery: ({queryKey, queryFn}: {queryKey: string[]; queryFn: () => null}) => {
         if (queryKey.includes('tariffs')) {
-            console.log(true);
             return {data: {tariffs: [tariff1, tariff2]}, isLoading: undefined, error: undefined};
         }
         if (queryKey.includes('tariffInfo')) {
