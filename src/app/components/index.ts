@@ -1,4 +1,4 @@
-export * from './Layout/Layout';
-export * from './Header';
-export * from './SideMenu';
 export * from './LeftPanelLogo';
+export * from './Header';
+export * from './Layout';
+export * from './SideMenu';

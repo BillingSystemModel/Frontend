@@ -1,6 +1,6 @@
 import {memo} from 'react';
 import {Outlet} from 'react-router-dom';
-import {SideMenu} from '../SideMenu/SideMenu';
+import {SideMenu} from '../SideMenu';
 import './Layout.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';

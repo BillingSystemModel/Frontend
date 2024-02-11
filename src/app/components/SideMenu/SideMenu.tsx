@@ -1,11 +1,3 @@
-import {
-    CDBSidebar,
-    CDBSidebarContent,
-    CDBSidebarFooter,
-    CDBSidebarHeader,
-    CDBSidebarMenu,
-    CDBSidebarMenuItem,
-} from 'cdbreact';
 import {memo, useCallback, useState} from 'react';
 import './sideMenu.css';
 import {Routes} from '../../routes';
@@ -33,44 +25,61 @@ export const SideMenu = memo(function SideMenu() {
 
     return (
         <>
-            <CDBSidebar
-                backgroundColor="#5227CC"
-                breakpoint={720}
-                className=""
-                maxWidth="230px"
-                minWidth="80px"
-                textColor="#fff"
-                toggled={false}
-            >
-                <CDBSidebarHeader>
-                    <div className="side-menu-header-container">
-                        <div className="side-menu-kklr">KKLR</div>
-                        <div className="side-menu-logo-container">
-                            <div style={{marginBottom: '-2px'}}>Billing</div>
-                            <div style={{marginTop: '-2px'}}>system</div>
+            <div className="side-menu">
+                <div className="side-menu-container">
+                    <div className="side-menu-container-two">
+                        <div className="side-menu-header">
+                            <div className="side-menu-header-div">
+                                <div className="side-menu-header-container">
+                                    <div className="side-menu-kklr">KKLR</div>
+                                    <div className="side-menu-logo-container">
+                                        <div style={{marginBottom: '-2px'}}>Billing</div>
+                                        <div style={{marginTop: '-2px'}}>system</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="side-menu-content">
+                            <nav className="side-menu-content-menu">
+                                <ul className="side-menu-content-menu-ul">
+                                    <li className="side-menu-item">
+                                        <div className="side-menu-item-container" tabIndex={0} role="button">
+                                            <i className="bi-person-fill side-menu-item-icon fa-lg"></i>
+                                            <a className="side-menu-item-link" href={Routes.PERSONAL_ACCOUNT}>
+                                                Личный кабинет
+                                            </a>
+                                        </div>
+
+                                        <div className="side-menu-item-container" tabIndex={0} role="button">
+                                            <i className="bi-justify side-menu-item-icon fa-lg"></i>
+                                            <a className="side-menu-item-link" href={Routes.TARIFFS}>
+                                                Тарифы
+                                            </a>
+                                        </div>
+
+                                        <div className="side-menu-item-container" tabIndex={0} role="button">
+                                            <i className="bi-newspaper side-menu-item-icon fa-lg"></i>
+                                            <a className="side-menu-item-link" href={Routes.REPORTS}>
+                                                Отчеты
+                                            </a>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+
+                        <div className="side-menu-item">
+                            <li className="side-menu-footer-li">
+                                <div className="side-menu-item-container" tabIndex={0} role="button">
+                                    <i className="bi-box-arrow-right side-menu-item-icon fa-lg"></i>
+                                    <div onClick={handleOpen}>Выйти</div>
+                                </div>
+                            </li>
                         </div>
                     </div>
-                </CDBSidebarHeader>
-                <CDBSidebarContent>
-                    <CDBSidebarMenu>
-                        <CDBSidebarMenuItem className="side-menu-item" icon="bi bi-person-fill" iconSize="lg">
-                            <a href={Routes.PERSONAL_ACCOUNT}>Личный кабинет</a>
-                        </CDBSidebarMenuItem>
-                        <CDBSidebarMenuItem className="side-menu-item" icon="bi bi-justify">
-                            <a href={Routes.TARIFFS}>Тарифы</a>
-                        </CDBSidebarMenuItem>
-                        <CDBSidebarMenuItem className="side-menu-item" icon="bi bi-newspaper">
-                            <a href={Routes.REPORTS}>Отчеты</a>
-                        </CDBSidebarMenuItem>
-                    </CDBSidebarMenu>
-                </CDBSidebarContent>
-
-                <CDBSidebarFooter className="side-menu-item">
-                    <CDBSidebarMenuItem icon="bi bi-box-arrow-right">
-                        <div onClick={handleOpen}>Выйти</div>
-                    </CDBSidebarMenuItem>
-                </CDBSidebarFooter>
-            </CDBSidebar>
+                </div>
+            </div>
 
             <Modal show={showModal} onHide={handleClose}>
                 <Modal.Header closeButton>
