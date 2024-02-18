@@ -1,10 +1,9 @@
-import React, {memo, useState} from 'react';
+import {memo, useState} from 'react';
 import {Alert, Button, Form} from 'react-bootstrap';
 import {Link, useNavigate} from 'react-router-dom';
 import {SubmitHandler, useForm} from 'react-hook-form';
 
-import {LeftPanelLogo} from '../app/components';
-import {Routes} from '../app';
+import {LeftPanelLogo, Routes} from '../app';
 import {baseURL, PHONE_KEY, TOKEN_KEY} from '../constants';
 import {LoginForm} from './types';
 
@@ -36,8 +35,6 @@ export const Login = memo(function Login() {
             }
 
             const token = await res.text();
-
-            // Поместить в session storage и номер теелфона для запросов
             sessionStorage.setItem(TOKEN_KEY, token);
             sessionStorage.setItem(PHONE_KEY, loginForm.phoneNumber);
             navigate(Routes.PERSONAL_ACCOUNT, {replace: true});
@@ -67,6 +64,7 @@ export const Login = memo(function Login() {
                                 })}
                                 onChange={() => unregisterLoginForm('phoneNumber')}
                                 isInvalid={!!errors.phoneNumber?.type}
+                                data-testid="input-login"
                             />
                             <Form.Control.Feedback type="invalid">
                                 {errors.phoneNumber?.message || 'Номер телефона состоит только из 11 цифр'}
@@ -92,6 +90,7 @@ export const Login = memo(function Login() {
                                 })}
                                 onChange={() => unregisterLoginForm('password')}
                                 isInvalid={!!errors.password?.type}
+                                data-testid="input-pwd"
                             />
                             <Form.Control.Feedback type="invalid">
                                 {errors.password?.message || 'Пароль содержит недопустимые символы'}
@@ -101,7 +100,7 @@ export const Login = memo(function Login() {
                             Номер телефона или пароль введены неверно
                         </Alert>
 
-                        <Button className="login-submit-button" type="submit">
+                        <Button className="login-submit-button" type="submit" data-testid="submit-btn">
                             Войти
                         </Button>
                     </Form>

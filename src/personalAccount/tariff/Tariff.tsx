@@ -25,7 +25,7 @@ export const Tariff = memo(function Tariff() {
             }).then((res) => res.json()),
     });
 
-    const {data: tariffRes} = useQuery<{ tariff: TariffInfo }>({
+    const {data: tariffRes} = useQuery<{tariff: TariffInfo}>({
         queryKey: ['tariff'],
         queryFn: () =>
             fetch(`${baseURL}/tariff/${phoneNumber}`, {
@@ -51,14 +51,15 @@ export const Tariff = memo(function Tariff() {
                 <Button variant="primary" className="mt-3" onClick={handleChangeTariff}>
                     ПОДКЛЮЧИТЬ ТАРИФ
                 </Button>
-            </div>)
+            </div>
+        );
     }
 
     return (
         <div className="m-4">
-            <TariffData title={tariffRes?.tariff?.title ?? ''}/>
+            <TariffData title={tariffRes?.tariff?.title ?? ''} />
             <div className="mt-4">
-                <TariffDescription tariff={tariffRes?.tariff} contractDate={user.contractDate}/>
+                <TariffDescription tariff={tariffRes?.tariff} contractDate={user.contractDate} />
             </div>
             <Button variant="primary" className="mt-3" onClick={handleChangeTariff}>
                 ИЗМЕНИТЬ ТАРИФ

@@ -13,8 +13,6 @@ export interface PropsTariffSlider {
 export const TariffsSlider = memo(function TariffsSlider({tariffs, tariffIdSelect}: PropsTariffSlider) {
     const [tariffId, setTariffId] = useState(tariffIdSelect);
 
-    // console.log(tariffId);
-
     if (!tariffs) {
         return null;
     }
