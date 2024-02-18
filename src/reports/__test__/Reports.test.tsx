@@ -5,6 +5,7 @@ import {Reports} from '../Reports';
 
 describe('Reports', () => {
     beforeEach(() => {
+        global.console.error = () => null;
         global.fetch = vi.fn();
     });
 

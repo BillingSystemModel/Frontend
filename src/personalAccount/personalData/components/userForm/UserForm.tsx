@@ -123,7 +123,7 @@ export const UserForm = memo(function UserForm(props: UserFormProps) {
         } catch (err) {
             console.error(err);
         }
-    }
+    };
 
     const handleChangeForm = async () => {
         const postUser = {
@@ -236,6 +236,7 @@ export const UserForm = memo(function UserForm(props: UserFormProps) {
                     </Form.Label>
                     <Col sm="5">
                         <Form.Control
+                            id="passport"
                             type="text"
                             defaultValue={user.passport}
                             {...passportRegister('passport', {
@@ -243,6 +244,7 @@ export const UserForm = memo(function UserForm(props: UserFormProps) {
                                 pattern: {value: /[0-9]{10}/, message: 'Паспорт состоит только из 10 цифр'},
                             })}
                             isInvalid={!!passportErrors.passport?.type}
+                            data-testid="input-passport"
                         />
                         <Form.Control.Feedback type="invalid">
                             {passportErrors.passport?.message || 'Паспорт состоит только из 10 цифр'}
@@ -251,7 +253,7 @@ export const UserForm = memo(function UserForm(props: UserFormProps) {
                     {showPassportButton && (
                         <>
                             <Col className="save-btn">
-                                <Button variant="link" type="submit">
+                                <Button variant="link" type="submit" data-testid="submit-passport">
                                     Сохранить
                                 </Button>
                                 <Button id="passport" variant="link" onClick={handleFormChangerReset}>
@@ -307,6 +309,7 @@ export const UserForm = memo(function UserForm(props: UserFormProps) {
                                 },
                             })}
                             isInvalid={!!emailErrors.email?.type}
+                            data-testid="input-email"
                         />
                         <Form.Control.Feedback type="invalid">
                             {emailErrors.email?.message || 'Ошибка ввода email'}
@@ -315,7 +318,7 @@ export const UserForm = memo(function UserForm(props: UserFormProps) {
                     {showEmailButton && (
                         <>
                             <Col className="save-btn">
-                                <Button variant="link" type="submit">
+                                <Button variant="link" type="submit" data-testid="submit-email">
                                     Сохранить
                                 </Button>
                                 <Button id="email" variant="link" onClick={handleFormChangerReset}>
@@ -327,7 +330,7 @@ export const UserForm = memo(function UserForm(props: UserFormProps) {
                 </Form.Group>
             </Form>
 
-            <Button variant="link" onClick={handleOpenPasswordModal} className="change-pwd">
+            <Button variant="link" onClick={handleOpenPasswordModal} className="change-pwd" data-testid="change-pwd">
                 Изменить пароль
             </Button>
 
@@ -385,6 +388,7 @@ export const UserForm = memo(function UserForm(props: UserFormProps) {
                                             },
                                         },
                                     })}
+                                    data-testid="input-old-pwd"
                                     onChange={() => {
                                         unregisterPassword('password.oldPassword');
                                         setOldPasswordError(false);
@@ -414,6 +418,7 @@ export const UserForm = memo(function UserForm(props: UserFormProps) {
                                             },
                                         },
                                     })}
+                                    data-testid="input-new-pwd"
                                     isInvalid={!!passwordErrors.password?.newPassword?.type}
                                 />
                                 <Form.Control.Feedback type="invalid">
@@ -439,6 +444,7 @@ export const UserForm = memo(function UserForm(props: UserFormProps) {
                                             },
                                         },
                                     })}
+                                    data-testid="input-re-new-pwd"
                                     isInvalid={
                                         !!passwordErrors.password?.repeatedNewPassword?.type || !isEqualPasswords
                                     }
@@ -450,7 +456,12 @@ export const UserForm = memo(function UserForm(props: UserFormProps) {
                             </Col>
                         </Form.Group>
                         <Col sm="11">
-                            <Button type="submit" className="pwd-submit-btn" disabled={isPasswordChangeDisabled}>
+                            <Button
+                                type="submit"
+                                className="pwd-submit-btn"
+                                disabled={isPasswordChangeDisabled}
+                                data-testid="submit-pwd"
+                            >
                                 Изменить
                             </Button>
                         </Col>
