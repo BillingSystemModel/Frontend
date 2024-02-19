@@ -3,7 +3,7 @@ import {render, screen, waitFor} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import {Login} from '../Login';
-import {PHONE_KEY} from '../../constants';
+import {LoginForm} from '../types';
 
 vi.mock('react-router-dom');
 
@@ -31,6 +31,14 @@ describe('Login input forms', () => {
 
     afterEach(() => {
         vi.clearAllMocks();
+    });
+
+    it('return work correctly interface', () => {
+        const loginForm = {
+            phoneNumber: '',
+            password: '',
+        };
+        expectTypeOf(loginForm).toMatchTypeOf<LoginForm>();
     });
 
     it('returns message about invalid symbols in password', async () => {
@@ -103,11 +111,35 @@ describe('Login input forms', () => {
         expect(invalidMessage).toBeInTheDocument();
     });
 
+    it('returns no message about invalid length in phone number (length === 11)', async () => {
+        const inputLogin = screen.getByTestId('input-login');
+        const submitButton = screen.getByTestId('submit-btn');
+        const phoneNumber = '89316660908';
+
+        userEvent.type(inputLogin, phoneNumber);
+        userEvent.click(submitButton);
+
+        expect(phoneNumber.length).toEqual(11);
+
+        expect(inputLogin.className).toEqual('form-control');
+    });
+
     it('returns message about invalid symbols in phone number', async () => {
         const inputLogin = screen.getByTestId('input-login');
         const submitButton = screen.getByTestId('submit-btn');
 
         await userEvent.type(inputLogin, '8931666gpgp');
+        userEvent.click(submitButton);
+
+        const invalidMessage = screen.getByText('Номер телефона состоит только из 11 цифр');
+        expect(invalidMessage).toBeInTheDocument();
+    });
+
+    it('returns message about invalid special symbols in phone number', async () => {
+        const inputLogin = screen.getByTestId('input-login');
+        const submitButton = screen.getByTestId('submit-btn');
+
+        await userEvent.type(inputLogin, '+7(931)-666-80-90');
         userEvent.click(submitButton);
 
         const invalidMessage = screen.getByText('Номер телефона состоит только из 11 цифр');
