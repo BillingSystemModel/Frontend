@@ -34,7 +34,7 @@ describe('UserForm input forms', () => {
 
     it('returns message about invalid passport length (length < 10)', async () => {
         const inputPassport = screen.getByTestId('input-passport');
-        const passport = '102919171';
+        const passport = '1029191';
 
         userEvent.type(inputPassport, passport);
 
@@ -63,6 +63,23 @@ describe('UserForm input forms', () => {
 
             const invalidMessage = screen.getByText('Паспорт состоит только из 10 цифр');
             expect(invalidMessage).toBeInTheDocument();
+        });
+    });
+
+    it.each([
+        {passport: '123456789', expect: 'form-control is-invalid'},
+        {passport: '1234567890', expect: 'form-control'},
+        {passport: '12345678901', expect: 'form-control is-invalid'},
+    ])('returns %s passport input', async ({passport, expect: _expect}) => {
+        const inputPassport = screen.getByTestId('input-passport');
+
+        await userEvent.type(inputPassport, passport);
+
+        const submitButton = screen.getByTestId('submit-passport');
+        userEvent.click(submitButton);
+
+        await waitFor(() => {
+            expect(inputPassport.className).toEqual(_expect);
         });
     });
 
