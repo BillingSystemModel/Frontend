@@ -1,0 +1,39 @@
+name: NodeJS with Wite
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [14.x, 16.x, 18.x]
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - name: Restoring npm cache
+      uses: actions/cache@v2
+      with:
+        path: '**/node_modules'
+        key: ${{ runner.os }}-modules-${{ hashFiles('**/package.lock') }}
+
+    - name: Build
+      if: steps.npm-cache.outputs.cache-hit != 'true'
+      run: npm install
+
+    - name: Unit tests
+      run: npm test
+
+    - name: Integration tests
+      run: npm run integration
