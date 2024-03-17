@@ -12,39 +12,37 @@ import {Tariff} from '../../personalAccount/tariff';
 import {Register} from '../../register';
 import {Reports} from '../../reports';
 
-export const Router = memo(function Router() {
-    const router = useMemo(
-        () =>
-            createBrowserRouter(
-                createRoutesFromElements(
-                    <Route>
-                        <Route path={Routes.LOGIN} element={<Login />} />
-                        <Route path={Routes.REGISTER} element={<Register />} />
-                        <Route
-                            path={Routes.MAIN_PAGE}
-                            element={
-                                <RequireAuth>
-                                    <Layout />
-                                </RequireAuth>
-                            }
-                        >
-                            {/*Тарифы*/}
-                            <Route path={Routes.TARIFFS} element={<Tariffs />} />
+export const useRoutes = () => {
+    return createRoutesFromElements(
+        <Route>
+            <Route path={Routes.LOGIN} element={<Login />} />
+            <Route path={Routes.REGISTER} element={<Register />} />
+            <Route
+                path={Routes.MAIN_PAGE}
+                element={
+                    <RequireAuth>
+                        <Layout />
+                    </RequireAuth>
+                }
+            >
+                {/*Тарифы*/}
+                <Route path={Routes.TARIFFS} element={<Tariffs />} />
 
-                            <Route path={Routes.REPORTS} element={<Reports />} />
+                <Route path={Routes.REPORTS} element={<Reports />} />
 
-                            {/*Личный кабинет*/}
-                            <Route path={Routes.PERSONAL_ACCOUNT} element={<PersonalAccount />}>
-                                <Route path={Routes.PERSONAL_DATA} element={<PersonalData />} />
-                                <Route path={Routes.TARIFF} element={<Tariff />} />
-                            </Route>
-                        </Route>
-                        ,
-                    </Route>,
-                ),
-            ),
-        [],
+                {/*Личный кабинет*/}
+                <Route path={Routes.PERSONAL_ACCOUNT} element={<PersonalAccount />}>
+                    <Route path={Routes.PERSONAL_DATA} element={<></>} />
+                    <Route path={Routes.TARIFF} element={<></>} />
+                </Route>
+            </Route>
+            ,
+        </Route>,
     );
+};
+
+export const Router = memo(function Router() {
+    const router = useMemo(() => createBrowserRouter(useRoutes()), []);
 
     return <RouterProvider router={router} />;
 });

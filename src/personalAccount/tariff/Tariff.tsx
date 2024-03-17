@@ -2,7 +2,7 @@ import {memo} from 'react';
 import {TariffData} from './components/tariffData';
 import {TariffDescription} from './components/tariffDescription';
 import {Alert, Button} from 'react-bootstrap';
-import {Routes} from '../../app';
+import {Routes} from '../../app/routes/Routes';
 import {baseURL, PHONE_KEY, TOKEN_KEY} from '../../constants';
 import {Tariff as TariffInfo} from '../../tariffs/types';
 import {useQuery} from '@tanstack/react-query';
@@ -48,7 +48,7 @@ export const Tariff = memo(function Tariff() {
         return (
             <div className="m-4">
                 <Alert className="center">Тариф не подключен</Alert>
-                <Button variant="primary" className="mt-3" onClick={handleChangeTariff}>
+                <Button variant="primary" className="mt-3" onClick={handleChangeTariff} data-testid="connect">
                     ПОДКЛЮЧИТЬ ТАРИФ
                 </Button>
             </div>
@@ -61,7 +61,7 @@ export const Tariff = memo(function Tariff() {
             <div className="mt-4">
                 <TariffDescription tariff={tariffRes?.tariff} contractDate={user.contractDate} />
             </div>
-            <Button variant="primary" className="mt-3" onClick={handleChangeTariff}>
+            <Button variant="primary" className="mt-3" onClick={handleChangeTariff} data-testid="change">
                 ИЗМЕНИТЬ ТАРИФ
             </Button>
         </div>

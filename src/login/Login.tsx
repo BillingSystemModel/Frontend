@@ -3,11 +3,12 @@ import {Alert, Button, Form} from 'react-bootstrap';
 import {Link, useNavigate} from 'react-router-dom';
 import {SubmitHandler, useForm} from 'react-hook-form';
 
-import {LeftPanelLogo, Routes} from '../app';
 import {baseURL, PHONE_KEY, TOKEN_KEY} from '../constants';
 import {LoginForm} from './types';
 
 import './Login.css';
+import {Routes} from '../app/routes/Routes';
+import {LeftPanelLogo} from '../app';
 
 export const Login = memo(function Login() {
     const navigate = useNavigate();

@@ -6,7 +6,7 @@ import {Tariff} from '../../types';
 import '../TariffSlider/TariffSlider.css';
 import {getTariffCost} from '../../logic/filterTariffs';
 import {baseURL, PHONE_KEY, TOKEN_KEY} from '../../../constants';
-import {getTariffSMSCount} from "../../logic/tariffSMS";
+import {getTariffSMSCount} from '../../logic/tariffSMS';
 
 export interface PropsTariff {
     tariff: Tariff;
@@ -57,9 +57,7 @@ export const TariffCard = memo(function TariffCard({tariff, tariffId, onSetTarif
     return (
         <li className="card">
             <Card.Body className="tariff-card-body">
-                <Card.Title>
-                    {title}
-                </Card.Title>
+                <Card.Title>{title}</Card.Title>
                 <Card.Subtitle className="mb-2 text-muted">{description}</Card.Subtitle>
                 <div>
                     <div>
@@ -72,10 +70,16 @@ export const TariffCard = memo(function TariffCard({tariff, tariffId, onSetTarif
                         Кол-во сообщений - <span className="fw-bold">{messagesCount}</span>
                     </div>
                     <div>
-                        Кол-во Гб интернета - <span className="fw-bold">{Number((internetPackage?.packOfMB ?? 0) / 1024).toFixed(2)}</span>
+                        Кол-во Гб интернета -{' '}
+                        <span className="fw-bold">{Number((internetPackage?.packOfMB ?? 0) / 1024).toFixed(2)}</span>
                     </div>
                 </div>
-                <Button className="tariff-card-submit" onClick={handleOpen} disabled={id === tariffId}>
+                <Button
+                    className="tariff-card-submit"
+                    onClick={handleOpen}
+                    disabled={id === tariffId}
+                    data-testid={`tariff-${id}`}
+                >
                     Подключить
                 </Button>
 
@@ -91,7 +95,9 @@ export const TariffCard = memo(function TariffCard({tariff, tariffId, onSetTarif
                         <Button variant="secondary" onClick={handleClose}>
                             Нет
                         </Button>
-                        <Button onClick={handleSubmit}>Да</Button>
+                        <Button onClick={handleSubmit} data-testid="submit-modal">
+                            Да
+                        </Button>
                     </Modal.Footer>
                 </Modal>
             </Card.Body>

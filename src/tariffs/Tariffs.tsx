@@ -98,8 +98,9 @@ export const Tariffs = memo(function Tariffs() {
                     className="form-control tariffs-search-input"
                     placeholder="Поиск по названию"
                     aria-label="Поиск по названию"
+                    data-testid="search"
                 />
-                <Button className="tariffs-button" onClick={handleOpen}>
+                <Button className="tariffs-button" onClick={handleOpen} data-testid="filter">
                     Фильтр
                 </Button>
 
@@ -125,6 +126,7 @@ export const Tariffs = memo(function Tariffs() {
                                             })}
                                             onChange={() => unregisterFiltersTariffs('costTariff.min')}
                                             isInvalid={!!errors.costTariff?.min?.type}
+                                            data-testid="cost_min"
                                         />
                                         <Form.Control.Feedback type="invalid">Число больше нуля</Form.Control.Feedback>
                                     </InputGroup>
@@ -141,6 +143,7 @@ export const Tariffs = memo(function Tariffs() {
                                             })}
                                             onChange={() => unregisterFiltersTariffs('costTariff.max')}
                                             isInvalid={!!errors.costTariff?.max?.type}
+                                            data-testid="cost_max"
                                         />
                                         <Form.Control.Feedback type="invalid">Число больше нуля</Form.Control.Feedback>
                                     </InputGroup>
@@ -261,7 +264,7 @@ export const Tariffs = memo(function Tariffs() {
                                 </Col>
                             </Form.Group>
                             <Col sm="11">
-                                <Button type="submit" className="tariffs-submit">
+                                <Button type="submit" className="tariffs-submit" data-testid="filters_submit">
                                     Применить
                                 </Button>
                             </Col>
