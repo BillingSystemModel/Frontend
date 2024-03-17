@@ -23,6 +23,10 @@ export const SideMenu = memo(function SideMenu() {
         setShowModal(false);
     }, [setShowModal]);
 
+    const onClickReport = useCallback(() => {
+        navigate(Routes.REPORTS);
+    }, []);
+
     return (
         <>
             <div className="side-menu">
@@ -58,11 +62,15 @@ export const SideMenu = memo(function SideMenu() {
                                             </a>
                                         </div>
 
-                                        <div className="side-menu-item-container" tabIndex={0} role="button">
+                                        <div
+                                            className="side-menu-item-container"
+                                            tabIndex={0}
+                                            role="button"
+                                            data-testid="reports"
+                                            onClick={onClickReport}
+                                        >
                                             <i className="bi-newspaper side-menu-item-icon fa-lg"></i>
-                                            <a className="side-menu-item-link" href={Routes.REPORTS}>
-                                                Отчеты
-                                            </a>
+                                            <a className="side-menu-item-link">Отчеты</a>
                                         </div>
                                     </li>
                                 </ul>
@@ -73,7 +81,9 @@ export const SideMenu = memo(function SideMenu() {
                             <li className="side-menu-footer-li">
                                 <div className="side-menu-item-container" tabIndex={0} role="button">
                                     <i className="bi-box-arrow-right side-menu-item-icon fa-lg"></i>
-                                    <div onClick={handleOpen}>Выйти</div>
+                                    <div onClick={handleOpen} data-testid="logout">
+                                        Выйти
+                                    </div>
                                 </div>
                             </li>
                         </div>
@@ -93,7 +103,9 @@ export const SideMenu = memo(function SideMenu() {
                     <Button variant="secondary" onClick={handleClose}>
                         Нет
                     </Button>
-                    <Button onClick={handleLogOut}>Да</Button>
+                    <Button onClick={handleLogOut} data-testid="submit_logout">
+                        Да
+                    </Button>
                 </Modal.Footer>
             </Modal>
         </>

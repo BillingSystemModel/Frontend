@@ -9,6 +9,9 @@ export default mergeConfig(
             globals: true,
             environment: 'jsdom',
             setupFiles: './tests/vitest.config.ts',
+            coverage: {
+                reporter: ['html', 'text'],
+            },
         },
     }),
 );
