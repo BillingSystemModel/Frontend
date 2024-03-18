@@ -78,5 +78,5 @@ jobs:
       if: steps.npm-cache.outputs.cache-hit != 'true'
       run: npm install
 
-    - name: Unit tests
+    - name: Integration tests
       run: npm run integration
